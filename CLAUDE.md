@@ -43,7 +43,7 @@ python3 tools/check_app.py                                the two copies of ever
 python3 tools/app_edit.py ...                             rename or delete a screen, remove an image, keeping every copy in step
 ```
 
-Sign-ins: `setup_lists.py` signs in to SharePoint (Microsoft Graph, the person must be a site owner; `--apply` asks for the right to create lists). `build_weekly_flow.py --apply` signs in to Power Automate. Everything else runs offline on files in the repo.
+Sign-ins: `setup_lists.py` signs in to SharePoint (Microsoft Graph, the person must be a site owner; `--apply` asks for the right to create lists). `build_weekly_flow.py --apply` signs in to Power Automate and Power Apps in one window (the flow, and the person's own connections for it). Everything else runs offline on files in the repo.
 
 ## Rules
 

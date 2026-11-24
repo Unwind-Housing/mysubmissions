@@ -2,18 +2,22 @@
 
 Usage (from the repo root, .venv active):
     python3 tools/build_weekly_flow.py eht                        compare: template + eht's settings against eht's flow
+    python3 tools/build_weekly_flow.py <folder> --apply           create the flow with your own connections
     python3 tools/build_weekly_flow.py <folder> --apply --connections-from eht
+                                                                  or with the connections of eht's weekly flow
                                                                   create the flow (or update the one this made before)
     python3 tools/build_weekly_flow.py --refresh-from eht         remake template/flows/weekly.json from eht's flow
 
 template/flows/weekly.json is one organization's weekly flow with every value that belongs to one organization replaced by a token.
 Stamping puts an organization's values in from settings.json and settings.lock.json, then applies the weekly settings
 (test mode, and the trigger and reply that let the app's Send to bookkeeper button start it). Without --apply nothing
-outside the repo is touched. With it, the flow is created in the environment named in the lock file, using the
-connections of an existing flow there, and its ID is written to the lock file.
+outside the repo is touched. With it, the flow is created in the environment named in the lock file, using the signed-in
+person's own SharePoint, Excel Online (Business) and Office 365 Outlook connections (or, with --connections-from, those
+of another organization's flow in the same environment), and its ID is written to the lock file.
 """
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -144,6 +148,69 @@ def refresh(client):
     return counts
 
 
+CONNECTORS = {"shared_sharepointonline": "SharePoint", "shared_excelonlinebusiness": "Excel Online (Business)", "shared_office365": "Office 365 Outlook"}
+
+
+def pick_connections(connections, user=None):
+    """The template's connection references, each pointed at one of the person's own connections (as the connections API
+    lists them: name, properties.apiId, properties.statuses, properties.createdBy). Raises ValueError naming any
+    connector the person has no working connection for. Prefers a connection the person owns; among several, the
+    newest."""
+    want = json.loads(TEMPLATE.read_text())["connections"]
+    chosen, missing = {}, []
+    for api in sorted(set(want.values())):
+        mine = [c for c in connections if c.get("properties", {}).get("apiId") == api
+                and all(s.get("status") == "Connected" for s in c["properties"].get("statuses", []) or [{"status": "Connected"}])]
+        if user:
+            owned = [c for c in mine if (c["properties"].get("createdBy") or {}).get("userPrincipalName", "").lower() == user.lower()]
+            mine = owned or mine
+        if not mine:
+            missing.append(CONNECTORS.get(api.rsplit("/", 1)[-1], api.rsplit("/", 1)[-1]))
+            continue
+        mine.sort(key=lambda c: c["properties"].get("createdTime", ""), reverse=True)
+        chosen[api] = mine[0]["name"]
+    if missing:
+        raise ValueError("no connection for " + ", ".join(missing) + ". Make one at make.powerautomate.com > More > Connections > "
+                         "+ New connection (sign in with the account that will own the flow), then run this again.")
+    return {key: {"connectionName": chosen[api], "source": "Invoker", "id": api} for key, api in want.items()}
+
+
+POWERAPPS_SCOPE = ["https://service.powerapps.com//.default"]
+CONNECTIONS_API = "https://api.powerapps.com/providers/Microsoft.PowerApps/connections"
+
+
+def own_connections(token, environment):
+    """The signed-in person's connections in the environment, from the Power Apps connections API (a different service
+    from the flow API, so it takes its own token)."""
+    import requests
+    r = requests.get(CONNECTIONS_API, headers={"Authorization": f"Bearer {token}"},
+                     params={"api-version": "2016-11-01", "$filter": f"environment eq '{environment}'"})
+    if not r.ok:
+        raise RuntimeError(f"could not list connections: HTTP {r.status_code} {r.text[:400]}")
+    return r.json().get("value", [])
+
+
+def sign_in_twice(tenant, first, second, what):
+    """One browser sign-in for two services: the second token is taken silently from the first sign-in when the
+    identity service allows it, and only otherwise asks again."""
+    import msal
+    from inspect_tenant import FLOW_CLIENT
+    app = msal.PublicClientApplication(FLOW_CLIENT, authority=f"https://login.microsoftonline.com/{tenant}")
+    print(f"\nOpening your browser to sign in for {what} ({tenant}).")
+    r = app.acquire_token_interactive(scopes=first, prompt="select_account", timeout=300)
+    if "access_token" not in r:
+        raise RuntimeError(r.get("error_description", json.dumps(r)).splitlines()[0])
+    print(f"  Signed in as {r.get('id_token_claims', {}).get('preferred_username', '?')}")
+    accounts = app.get_accounts()
+    s = app.acquire_token_silent(second, account=accounts[0]) if accounts else None
+    if not s or "access_token" not in s:
+        print("  One more sign-in, for the connections list.")
+        s = app.acquire_token_interactive(scopes=second, timeout=300)
+        if "access_token" not in s:
+            raise RuntimeError(s.get("error_description", json.dumps(s)).splitlines()[0])
+    return r["access_token"], s["access_token"]
+
+
 def connection_refs(source_props):
     """Connection references for a new flow: the template's names, each pointed at the source flow's connection for that
     service."""
@@ -161,7 +228,7 @@ def main():
     ap.add_argument("where", nargs="?", help="a client's short name, or a folder that holds settings.json")
     ap.add_argument("--refresh-from", metavar="CLIENT", help="remake the template from this client's weekly flow")
     ap.add_argument("--apply", action="store_true", help="create or update the flow in Power Automate")
-    ap.add_argument("--connections-from", metavar="CLIENT", help="with --apply: the client whose weekly flow's connections to use")
+    ap.add_argument("--connections-from", metavar="CLIENT", help="with --apply: borrow the connections of this client's weekly flow instead of using your own")
     args = ap.parse_args()
     if args.refresh_from:
         for k, n in sorted(refresh(args.refresh_from).items()):
@@ -187,24 +254,36 @@ def main():
             same = json.loads(current.read_text())["properties"]["definition"] == d
             print("Identical to the flow in the repo." if same else "DIFFERS from the flow in the repo.")
             sys.exit(0 if same else 1)
-        print("Dry run: nothing created. Add --apply --connections-from <client> to create the flow.")
+        print("Dry run: nothing created. Add --apply to create the flow with your own connections.")
         return
-    if not args.connections_from:
-        ap.error("--apply needs --connections-from CLIENT")
+    if not re.fullmatch(r"Default-[0-9a-f-]{36}", lock.get("environment", "")) or lock["environment"].startswith("Default-00000000"):
+        sys.exit("STOPPED: the lock file's environment is not set. Run tools/setup_lists.py <org> --apply first (it records it), or put "
+                 "Default-<your tenant ID> under environment in settings.lock.json.")
 
     import requests
     from inspect_tenant import FLOW_API, FLOW_CLIENT, FLOW_SCOPE, safe_name, sign_in
     from urllib.parse import urlparse
     v = "api-version=2016-11-01"
-    src_lock = st.load(args.connections_from)[1]
-    src = json.loads(st.flow_file(args.connections_from, src_lock["flows"]["weekly"]).read_text())
-    if src_lock["environment"] != lock["environment"]:
-        sys.exit("STOPPED: the connections have to come from a flow in the same environment.")
-    refs = connection_refs(src["properties"])
     tenant = urlparse(s["sharepoint"]["listsSite"]).netloc.split(".")[0] + ".onmicrosoft.com"
+    env_path = f"/environments/{lock['environment']}"
+    if args.connections_from:
+        src_lock = st.load(args.connections_from)[1]
+        src = json.loads(st.flow_file(args.connections_from, src_lock["flows"]["weekly"]).read_text())
+        if src_lock["environment"] != lock["environment"]:
+            sys.exit("STOPPED: the connections have to come from a flow in the same environment.")
+        refs = connection_refs(src["properties"])
     http = requests.Session()
-    http.headers["Authorization"] = f"Bearer {sign_in(FLOW_CLIENT, tenant, FLOW_SCOPE, 'Power Automate (weekly flow)')}"
-    env_path = src["id"].split("/providers/Microsoft.ProcessSimple", 1)[1].rsplit("/flows/", 1)[0]
+    if args.connections_from:
+        http.headers["Authorization"] = f"Bearer {sign_in(FLOW_CLIENT, tenant, FLOW_SCOPE, 'Power Automate (weekly flow)')}"
+    else:
+        flow_token, apps_token = sign_in_twice(tenant, FLOW_SCOPE, POWERAPPS_SCOPE, "Power Automate (weekly flow and your connections)")
+        http.headers["Authorization"] = f"Bearer {flow_token}"
+        try:
+            refs = pick_connections(own_connections(apps_token, lock["environment"]))
+        except (ValueError, RuntimeError) as e:
+            sys.exit(f"STOPPED: {e}")
+        used = {r["connectionName"] for r in refs.values()}
+        print(f"  using your own connections: {', '.join(sorted(CONNECTORS[k.rsplit('/', 1)[-1]] for k in {r['id'] for r in refs.values()}))} ({len(used)} connections)")
     body = {"properties": {"displayName": name, "definition": d, "connectionReferences": refs, "state": "Started"}}
     if existing:
         r = http.patch(f"{FLOW_API}{env_path}/flows/{existing}?{v}", json=body)
@@ -217,6 +296,7 @@ def main():
         sys.exit(f"FAILED: HTTP {r.status_code} {r.text[:1500]}")
     fid = r.json()["name"]
     full = http.get(f"{FLOW_API}{env_path}/flows/{fid}?{v}&$expand=properties.definition").json()
+    full["properties"].pop("installedConnectionReferences", None)        # the API's expansion of each connection: bulk, not definition
     flows.mkdir(exist_ok=True)
     (flows / f"{safe_name(name)}__{fid[:8]}.json").write_text(json.dumps(full, indent=2))
     lock.setdefault("flows", {}).update(weekly=fid, weeklyBuilt=fid)

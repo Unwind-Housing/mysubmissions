@@ -99,8 +99,8 @@ python3 tools/build_weekly_flow.py yourname
 python3 tools/build_weekly_flow.py yourname --apply
 ```
 
-- The first line shows what the flow will do and where it reads and writes, with no sign-in. The second signs in to Power Automate and creates **Process Financial Submissions** in your default environment, owned by you. The flow's ID goes into `settings.lock.json`. Running it again updates the flow in place.
-- **Connections.** The flow needs your connections to SharePoint, Excel Online (Business) and Office 365 Outlook. Today the tool can only copy them from a MySubmissions flow that already exists in the same environment: add `--connections-from <name>`, where `<name>` is another organization folder in `clients/` whose flow was made this way (a test install next to the real one, say). **If this is the first MySubmissions flow in your tenant, the tool cannot create it yet.** That is the next thing being fixed; until then, open an issue and we will walk you through it.
+- The first line shows what the flow will do and where it reads and writes, with no sign-in. The second signs in (one browser window, for Power Automate and Power Apps together) and creates **Process Financial Submissions** in your default environment, owned by you, using your own connections to SharePoint, Excel Online (Business) and Office 365 Outlook. The flow's ID goes into `settings.lock.json`. Running it again updates the flow in place.
+- **Connections.** If you have never used one of those three in Power Automate, the tool stops and names it. Make the connection at **make.powerautomate.com > More > Connections > + New connection**, signed in as the account that will own the flow, then run the second line again. To reuse the connections of another MySubmissions flow in the same environment instead (a test install next to the real one, say), add `--connections-from <name>`, the other organization's folder under `clients/`.
 
 Whoever presses Send to bookkeeper in the app runs the flow on their own connections, and is asked to allow them the first time. They also need access to the output site.
 

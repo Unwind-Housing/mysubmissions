@@ -432,6 +432,25 @@ class SetupLists(unittest.TestCase):
         self.assertIn("EHT Weekly Financials", d["actions"]["Send_an_email_(V2)"]["inputs"]["parameters"]["emailMessage/Subject"])
 
 
+    def test_own_connections_are_picked_by_connector(self):
+        """A new install's flow uses the person's own connections: one per connector the template needs, the person's own
+        and the newest first; a missing connector stops it with a message that says what to make."""
+        import build_weekly_flow as b
+        def conn(name, api, who="me@example.org", when="2026-01-01", status="Connected"):
+            return {"name": name, "properties": {"apiId": f"/providers/Microsoft.PowerApps/apis/{api}", "createdTime": when,
+                                                 "createdBy": {"userPrincipalName": who}, "statuses": [{"status": status}]}}
+        mine = [conn("sp-old", "shared_sharepointonline", when="2025-01-01"), conn("sp-new", "shared_sharepointonline"),
+                conn("sp-theirs", "shared_sharepointonline", who="other@example.org", when="2026-06-01"),
+                conn("xl", "shared_excelonlinebusiness"), conn("mail-broken", "shared_office365", status="Error"),
+                conn("mail", "shared_office365", when="2024-01-01")]
+        refs = b.pick_connections(mine, user="me@example.org")
+        self.assertEqual(set(refs), set(json.loads(b.TEMPLATE.read_text())["connections"]))
+        self.assertEqual({r["id"].rsplit("/", 1)[-1]: r["connectionName"] for r in refs.values()},
+                         {"shared_sharepointonline": "sp-new", "shared_excelonlinebusiness": "xl", "shared_office365": "mail"})
+        self.assertTrue(all(r["source"] == "Invoker" for r in refs.values()))
+        with self.assertRaisesRegex(ValueError, "no connection for Excel Online \\(Business\\), Office 365 Outlook"):
+            b.pick_connections([conn("sp", "shared_sharepointonline")])
+
     def test_package_for_a_settings_folder(self):
         import build_template
         import settings
