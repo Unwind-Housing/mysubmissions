@@ -1,0 +1,1213 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  FinancialApprovals:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      Height: =If(Self.Width >= 1000, Max(App.Height, 640 * Z), 2516 * Z)
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+      OnVisible: =If(!(__MS_IS_FINANCIAL_APPROVER__), Notify("That page is for approvers.", NotificationType.Warning); Navigate(LandingPage))
+    Children:
+      - RectQuickActionBar5:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =RGBA(__MS_HEADER_RGB__, 1)
+            Height: =HB
+            Width: =Parent.Width
+      - ApprovalsGallery:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_ThreeTextVariant_ver5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            DelayItemLoading: =false
+            Height: =If(Parent.Width >= 1000, Parent.Height - HB - 176 * Z, 640 * Z)
+            Items: |+
+              =Filter('Financial Submissions','Type of thing'.Value = "Receipt" || 'Type of thing'.Value = "Invoice" || 'Type of thing'.Value = "Deposit" || 'Type of thing'.Value = "Reimbursement",Processed=false)
+            OnSelect: |-
+              =UpdateContext({locAtt: 1}); Reset(cmbPanelProject); Reset(cmbPanelAccount); Reset(txtPanelComments)
+            TemplateFill: =If(ThisItem.IsSelected, RGBA(232, 240, 250, 1), RGBA(0, 0, 0, 0))
+            TemplateSize: =140 * Z
+            Width: =If(Parent.Width >= 1000, RoundDown(Parent.Width / 2, 0), Parent.Width)
+            Y: =HB
+          Children:
+            - Title16:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Color: =If(IsBlank(ThisItem.'Cost Account'.Value), RGBA(168, 0, 0, 1), RGBA(0, 0, 0, 1))
+                  Font: =Font.'Open Sans'
+                  Height: =30 * Z
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16 * Z
+                  Text: =If(IsBlank(ThisItem.'Cost Account'.Value), "No project or cost account", If(IsBlank(ThisItem.'Cost Account'.Value), "", ThisItem.Project.Value & " - " & ThisItem.'Cost Account'.Value))
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =Parent.TemplateWidth - 250 * Z
+                  Wrap: =false
+                  X: =20 * Z
+                  Y: =90 * Z
+            - Subtitle13:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Color: =RGBA(96, 96, 96, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =30 * Z
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16 * Z
+                  Text: =ThisItem.'Type of thing'.Value & "  ·  " & ThisItem.'Created By'.DisplayName
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =Parent.TemplateWidth - 250 * Z
+                  Wrap: =false
+                  X: =20 * Z
+                  Y: =56 * Z
+            - Body6:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Right
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Color: =Switch(ThisItem.'Type of thing'.Value, "Invoice", RGBA(168, 0, 0, 1), "Reimbursement", RGBA(168, 0, 0, 1), "Deposit", RGBA(0, 128, 0, 1), RGBA(0, 0, 0, 1))
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =36 * Z
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =19 * Z
+                  Text: |-
+                    =Text(ThisItem.Amount, "[$-en-US]$ #,###.00")
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =240 * Z
+                  X: =Parent.TemplateWidth - 260 * Z
+                  Y: =18 * Z
+            - Separator16:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Fill: =RGBA(220, 224, 228, 1)
+                  FocusedBorderThickness: =2 * Z
+                  Height: =1 * Z
+                  OnSelect: =Select(Parent)
+                  Width: =Parent.TemplateWidth
+                  Y: =Parent.TemplateHeight - Self.Height
+            - Rectangle16:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Fill: =RGBA(0, 18, 107, 1)
+                  Height: =Parent.TemplateHeight - Separator16.Height
+                  OnSelect: =Select(Parent)
+                  Visible: =ThisItem.IsSelected
+                  Width: =4 * Z
+            - Title16_1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Color: =RGBA(168, 0, 0, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =40 * Z
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =22 * Z
+                  Text: =ThisItem.Vendor
+                  Width: =Parent.TemplateWidth - 290 * Z
+                  Wrap: =false
+                  X: =20 * Z
+                  Y: =12 * Z
+            - Checkbox1:
+                Control: Classic/CheckBox@2.1.0
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  CheckboxBorderColor: =RGBA(54, 176, 75, 1)
+                  CheckboxSize: =34 * Z
+                  CheckmarkFill: =RGBA(0, 0, 0, 1)
+                  Color: =If(ThisItem.Approved, RGBA(0, 128, 0, 1), RGBA(96, 96, 96, 1))
+                  Default: =ThisItem.Approved
+                  FocusedBorderThickness: =2 * Z
+                  Font: =Font.'Open Sans'
+                  Height: =48 * Z
+                  HoverColor: =RGBA(0, 18, 107, 1)
+                  OnCheck: |-
+                    =If(!ThisItem.Approved, With({r: LookUp('Financial Submissions', ID = ThisItem.ID)}, Patch('Financial Submissions', r, {Approved: true})); Refresh('Financial Submissions'))
+                  OnSelect: =Select(Parent)
+                  OnUncheck: |-
+                    =If(ThisItem.Approved, With({r: LookUp('Financial Submissions', ID = ThisItem.ID)}, Patch('Financial Submissions', r, {Approved: false})); Refresh('Financial Submissions'))
+                  Size: =17 * Z
+                  Text: =If(ThisItem.Approved, "Approved", "Approve")
+                  Width: =160 * Z
+                  X: =Parent.TemplateWidth - 180 * Z
+                  Y: =72 * Z
+            - Subtitle13_4:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =Self.Size * 1.8
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14 * Z
+                  Text: =ThisItem.'Created By'.DisplayName
+                  VerticalAlign: =VerticalAlign.Top
+                  Visible: =false
+                  Width: =Title16.Width
+                  X: =28 * Z
+                  Y: =82 * Z
+      - LblAppName5:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 1)
+            Color: =RGBA(__MS_HEADER_TEXT_RGB__, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =HB
+            Size: =If(Phone, 28 * Z, 24 * Z)
+            Text: ="Open Financial Approvals"
+            Width: =Parent.Width - Self.X - 140 * Z
+            X: =Max(If(Phone, 104 * Z, 84 * Z), (Parent.Width - 640 * Z) / 2 + 16 * Z)
+      - Label4:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Right
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =100 * Z
+            PaddingBottom: =5 * Z
+            PaddingLeft: =5 * Z
+            PaddingRight: =5 * Z
+            PaddingTop: =5 * Z
+            Size: =14 * Z
+            Text: =Text(Coalesce(Sum(Filter(ApprovalsGallery.AllItems, 'Type of thing'.Value = "Invoice"), Amount), 0), "[$-en-US]$#,##0.00") & Char(10) & Text(Coalesce(Sum(Filter(ApprovalsGallery.AllItems, 'Type of thing'.Value = "Deposit"), Amount), 0), "[$-en-US]$#,##0.00") & Char(10) & Text(Coalesce(Sum(Filter(ApprovalsGallery.AllItems, 'Type of thing'.Value = "Receipt"), Amount), 0), "[$-en-US]$#,##0.00") & Char(10) & Text(Coalesce(Sum(Filter(ApprovalsGallery.AllItems, 'Type of thing'.Value = "Reimbursement"), Amount), 0), "[$-en-US]$#,##0.00")
+            Width: =120 * Z
+            X: =ApprovalsGallery.Width / 2 + 30 * Z + 12 * Z
+            Y: =Rectangle1.Y + 10 * Z
+      - Label5:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Right
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =100 * Z
+            PaddingBottom: =5 * Z
+            PaddingLeft: =5 * Z
+            PaddingRight: =5 * Z
+            PaddingTop: =5 * Z
+            Size: =14 * Z
+            Text: ="Invoices" & Char(10) & "Deposits" & Char(10) & "Receipts" & Char(10) & "Reimbursements"
+            Width: =220 * Z
+            X: =ApprovalsGallery.Width / 2 + 30 * Z - 232 * Z
+            Y: =Rectangle1.Y + 10 * Z
+      - Rectangle1:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =RGBA(205, 210, 215, 1)
+            FocusedBorderThickness: =2 * Z
+            Height: =2 * Z
+            Width: =ApprovalsGallery.Width - 32 * Z
+            X: =16 * Z
+            Y: =ApprovalsGallery.Y + ApprovalsGallery.Height + 8 * Z
+      - icon_back:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(__MS_HEADER_TEXT_RGB__, 1)
+            FocusedBorderThickness: =2 * Z
+            Height: =If(Phone, 76 * Z, 56 * Z)
+            Icon: =Icon.ArrowLeft
+            OnSelect: =Navigate(LandingPage)
+            PaddingBottom: =If(Phone, 16 * Z, 10 * Z)
+            PaddingLeft: =If(Phone, 16 * Z, 10 * Z)
+            PaddingRight: =If(Phone, 16 * Z, 10 * Z)
+            PaddingTop: =If(Phone, 16 * Z, 10 * Z)
+            Tooltip: ="Back"
+            Width: =If(Phone, 76 * Z, 56 * Z)
+            X: =22 * Z
+            Y: =(HB - Self.Height) / 2
+      - PanelBg:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =RGBA(244, 246, 248, 1)
+            FocusedBorderThickness: =2 * Z
+            Height: =If(Parent.Width >= 1000, Parent.Height - HB, 1500 * Z)
+            Width: =Parent.Width - Self.X
+            X: =If(Parent.Width >= 1000, ApprovalsGallery.Width, 0)
+            Y: =If(Parent.Width >= 1000, HB, Label4.Y + 166 * Z)
+      - icoRefresh:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(__MS_HEADER_TEXT_RGB__, 1)
+            FocusedBorderThickness: =2 * Z
+            Height: =If(Phone, 44 * Z, 36 * Z)
+            Icon: =Icon.Reload
+            OnSelect: =Refresh('Financial Submissions')
+            Tooltip: ="Refresh the list"
+            Width: =If(Phone, 44 * Z, 36 * Z)
+            X: =LblAppName5.X + Len(LblAppName5.Text) * If(Phone, 19.8 * Z, 17 * Z) + 14 * Z
+            Y: =(HB - Self.Height) / 2
+      - conPanelScroll:
+          Control: GroupContainer@1.5.0
+          Variant: AutoLayout
+          Properties:
+            DropShadow: =DropShadow.None
+            Height: =PanelBg.Height
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutOverflowY: =LayoutOverflow.Scroll
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Width: =PanelBg.Width
+            X: =PanelBg.X
+            Y: =PanelBg.Y
+          Children:
+            - conPanel:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  DropShadow: =DropShadow.None
+                  FillPortions: =0
+                  Height: =chkPanelApproved.Y + chkPanelApproved.Height + 8 * Z + If(CountRows(ApprovalsGallery.Selected.Attachments) > 1, 44 * Z, 0) + If(pdfPreview.Visible || imgPreview.Visible, pdfPreview.Height, If(CountRows(ApprovalsGallery.Selected.Attachments) > 0, 110 * Z, 0)) + 24 * Z
+                  LayoutMinHeight: =16
+                  LayoutMinWidth: =16
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                Children:
+                  - lblSelVendor:
+                      Control: Label@2.5.1
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(56, 96, 178, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =50 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =28 * Z
+                        Text: =If(IsBlank(ApprovalsGallery.Selected.ID), "Nothing waiting for approval", ApprovalsGallery.Selected.Vendor)
+                        Width: =Parent.Width - 64 * Z - 48 * Z
+                        X: =0 + 32 * Z
+                        Y: =0 + 28 * Z
+                  - lblSelDetails:
+                      Control: Label@2.5.1
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(96, 96, 96, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =36 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =18 * Z
+                        Text: =If(IsBlank(ApprovalsGallery.Selected.ID), "", ApprovalsGallery.Selected.'Type of thing'.Value & " · " & Text(ApprovalsGallery.Selected.Amount, "[$-en-US]$#,##0.00") & If(IsBlank(ApprovalsGallery.Selected.'Invoice Number'), "", " · Invoice " & ApprovalsGallery.Selected.'Invoice Number') & If(IsBlank(ApprovalsGallery.Selected.'Invoice Date'), "", " · " & Text(ApprovalsGallery.Selected.'Invoice Date', "[$-en-US]mm/dd/yyyy")))
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelVendor.Y + lblSelVendor.Height
+                  - lblSelAccount:
+                      Control: Label@2.5.1
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =36 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =18 * Z
+                        Text: =If(IsBlank(ApprovalsGallery.Selected.ID) || !IsBlank(ApprovalsGallery.Selected.'Cost Account'.Value), "", IsBlank(ApprovalsGallery.Selected.Project.Value), "No project or cost account", "No cost account")
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID) && IsBlank(ApprovalsGallery.Selected.'Cost Account'.Value)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelDetails.Y + lblSelDetails.Height
+                  - lblSelSubmitted:
+                      Control: Label@2.5.1
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(96, 96, 96, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =32 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =16 * Z
+                        Text: =If(IsBlank(ApprovalsGallery.Selected.ID), "", "Submitted by " & ApprovalsGallery.Selected.'Created By'.DisplayName & " on " & Text(ApprovalsGallery.Selected.Created, "[$-en-US]mm/dd/yyyy"))
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =cmbPanelAccount.Y + cmbPanelAccount.Height + 8 * Z + If(btnPanelSaveAcct.Visible, 52 * Z, 0)
+                  - lblSelAttachHead:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =16 * Z
+                        Text: =If(CountRows(ApprovalsGallery.Selected.Attachments) = 0, "No attachments", "Attachments (" & CountRows(ApprovalsGallery.Selected.Attachments) & ")")
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelOpenItem.Y + lblSelOpenItem.Height + 8 * Z
+                  - lblSelAttach1:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Left
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(0, 103, 184, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =30 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: =Launch(Last(FirstN(ApprovalsGallery.Selected.Attachments, 1)).AbsoluteUri)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =16 * Z
+                        Text: =Last(FirstN(ApprovalsGallery.Selected.Attachments, 1)).DisplayName
+                        Underline: =true
+                        Visible: =CountRows(ApprovalsGallery.Selected.Attachments) >= 1
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelAttachHead.Y + lblSelAttachHead.Height + 0 * Z
+                  - lblSelAttach2:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Left
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(0, 103, 184, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =30 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: =Launch(Last(FirstN(ApprovalsGallery.Selected.Attachments, 2)).AbsoluteUri)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =16 * Z
+                        Text: =Last(FirstN(ApprovalsGallery.Selected.Attachments, 2)).DisplayName
+                        Underline: =true
+                        Visible: =CountRows(ApprovalsGallery.Selected.Attachments) >= 2
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelAttachHead.Y + lblSelAttachHead.Height + 34 * Z
+                  - lblSelAttach3:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Left
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(0, 103, 184, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =30 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: =Launch(Last(FirstN(ApprovalsGallery.Selected.Attachments, 3)).AbsoluteUri)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =16 * Z
+                        Text: =Last(FirstN(ApprovalsGallery.Selected.Attachments, 3)).DisplayName
+                        Underline: =true
+                        Visible: =CountRows(ApprovalsGallery.Selected.Attachments) >= 3
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelAttachHead.Y + lblSelAttachHead.Height + 68 * Z
+                  - lblSelOpenItem:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Left
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(0, 103, 184, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =30 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: =Launch("__MS_LISTS_SITE__/Lists/Financial%20Submissions/DispForm.aspx?ID=" & ApprovalsGallery.Selected.ID)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =15 * Z
+                        Text: =If(CountRows(ApprovalsGallery.Selected.Attachments) > 3, "Open the item in SharePoint to see all " & CountRows(ApprovalsGallery.Selected.Attachments) & " attachments", "Open the item in SharePoint")
+                        Underline: =true
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =txtPanelComments.Y + txtPanelComments.Height + 12 * Z
+                  - rectApproveDivider:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Fill: =RGBA(205, 210, 215, 1)
+                        FocusedBorderThickness: =2 * Z
+                        Height: =1 * Z
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelAttachHead.Y + lblSelAttachHead.Height + Min(CountRows(ApprovalsGallery.Selected.Attachments), 3) * 34 * Z + 12 * Z
+                  - chkPanelApproved:
+                      Control: Classic/CheckBox@2.1.0
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        CheckboxBorderColor: =RGBA(54, 176, 75, 1)
+                        CheckboxSize: =56 * Z
+                        CheckmarkFill: =RGBA(0, 0, 0, 1)
+                        Default: =ApprovalsGallery.Selected.Approved
+                        FocusedBorderThickness: =2 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =80 * Z
+                        HoverColor: =RGBA(0, 18, 107, 1)
+                        OnCheck: |-
+                          =If(!ApprovalsGallery.Selected.Approved, With({r: LookUp('Financial Submissions', ID = ApprovalsGallery.Selected.ID)}, Patch('Financial Submissions', r, {Approved: true})); Refresh('Financial Submissions'))
+                        OnUncheck: |-
+                          =If(ApprovalsGallery.Selected.Approved, With({r: LookUp('Financial Submissions', ID = ApprovalsGallery.Selected.ID)}, Patch('Financial Submissions', r, {Approved: false})); Refresh('Financial Submissions'))
+                        Size: =24 * Z
+                        Text: ="Approved"
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =rectApproveDivider.Y + 16 * Z
+                  - pdfPreview:
+                      Control: PDFViewer@2.5.0
+                      Properties:
+                        BorderColor: =RGBA(205, 210, 215, 1)
+                        Document: =Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).Value
+                        Fill: =RGBA(255, 255, 255, 1)
+                        Height: =If(App.Width >= 1000, Max(520 * Z, conPanelScroll.Height - Self.Y - 24 * Z), 520 * Z)
+                        Visible: =CountRows(ApprovalsGallery.Selected.Attachments) > 0 && EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".pdf")
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =chkPanelApproved.Y + chkPanelApproved.Height + 8 * Z + If(CountRows(ApprovalsGallery.Selected.Attachments) > 1, 44 * Z, 0)
+                  - imgPreview:
+                      Control: Image@2.2.3
+                      Properties:
+                        BorderColor: =RGBA(205, 210, 215, 1)
+                        BorderThickness: =1 * Z
+                        Fill: =RGBA(255, 255, 255, 1)
+                        Height: =If(App.Width >= 1000, Max(520 * Z, conPanelScroll.Height - Self.Y - 24 * Z), 520 * Z)
+                        Image: =Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).Value
+                        Visible: =CountRows(ApprovalsGallery.Selected.Attachments) > 0 && !(EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".pdf")) && (EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".png") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".jpg") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".jpeg") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".gif") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".bmp") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".webp"))
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =chkPanelApproved.Y + chkPanelApproved.Height + 8 * Z + If(CountRows(ApprovalsGallery.Selected.Attachments) > 1, 44 * Z, 0)
+                  - lblPrevAtt:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Left
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =If(Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))) > 1, RGBA(0, 103, 184, 1), RGBA(166, 166, 166, 1))
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =36 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: |-
+                          =UpdateContext({locAtt: Max(1, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))) - 1)})
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =16 * Z
+                        Text: ="‹ Previous"
+                        Underline: =true
+                        Visible: =CountRows(ApprovalsGallery.Selected.Attachments) > 1
+                        Width: =130 * Z
+                        X: =0 + 32 * Z
+                        Y: =chkPanelApproved.Y + chkPanelApproved.Height + 8 * Z
+                  - lblAttPos:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(96, 96, 96, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =36 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =16 * Z
+                        Text: |-
+                          =Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))) & " of " & CountRows(ApprovalsGallery.Selected.Attachments) & ": " & Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName
+                        Visible: =CountRows(ApprovalsGallery.Selected.Attachments) > 1
+                        Width: =Parent.Width - 324 * Z
+                        Wrap: =false
+                        X: =0 + 162 * Z
+                        Y: =chkPanelApproved.Y + chkPanelApproved.Height + 8 * Z
+                  - lblNextAtt:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Right
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =If(Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))) < CountRows(ApprovalsGallery.Selected.Attachments), RGBA(0, 103, 184, 1), RGBA(166, 166, 166, 1))
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =36 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: |-
+                          =UpdateContext({locAtt: Min(CountRows(ApprovalsGallery.Selected.Attachments), Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))) + 1)})
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =16 * Z
+                        Text: ="Next ›"
+                        Underline: =true
+                        Visible: =CountRows(ApprovalsGallery.Selected.Attachments) > 1
+                        Width: =130 * Z
+                        X: =0 + Parent.Width - 162 * Z
+                        Y: =chkPanelApproved.Y + chkPanelApproved.Height + 8 * Z
+                  - lblNoPreview:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(96, 96, 96, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =60 * Z
+                        Italic: =true
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =16 * Z
+                        Text: ="No preview for this kind of file. Use its link above to open it."
+                        Visible: =(CountRows(ApprovalsGallery.Selected.Attachments) > 0 && !(EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".pdf")) && !(EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".png") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".jpg") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".jpeg") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".gif") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".bmp") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".webp"))) && !(EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".docx") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".doc") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".xlsx") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".xlsm") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".xls") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".pptx") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".ppt"))
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =chkPanelApproved.Y + chkPanelApproved.Height + 8 * Z + If(CountRows(ApprovalsGallery.Selected.Attachments) > 1, 44 * Z, 0)
+                  - cmbPanelProject:
+                      Control: Classic/ComboBox@2.4.0
+                      Properties:
+                        BorderColor: =RGBA(190, 196, 202, 1)
+                        BorderThickness: =1
+                        ChevronBackground: =RGBA(0, 0, 0, 0)
+                        ChevronFill: =RGBA(96, 96, 96, 1)
+                        ChevronHoverBackground: =RGBA(232, 240, 250, 1)
+                        ChevronHoverFill: =RGBA(56, 96, 178, 1)
+                        DefaultSelectedItems: =Filter('Chargeable Projects', ID = ApprovalsGallery.Selected.Project.Id)
+                        DisplayFields: =["Title"]
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =48 * Z
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(186, 202, 226, 1)
+                        InputTextPlaceholder: ="Choose a project"
+                        Items: =Sort(Filter('Chargeable Projects', Retired = false), 'Project Name', SortOrder.Ascending)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5 * Z, 0)
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        PressedColor: =RGBA(255, 255, 255, 1)
+                        PressedFill: =RGBA(0, 18, 107, 1)
+                        SearchFields: =["Title"]
+                        SelectMultiple: =false
+                        SelectionColor: =RGBA(255, 255, 255, 1)
+                        SelectionFill: =RGBA(56, 96, 178, 1)
+                        SelectionTagColor: =RGBA(30, 30, 30, 1)
+                        SelectionTagFill: =RGBA(0, 0, 0, 0)
+                        Size: =16 * Z
+                        Tooltip: ="Project"
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelAccount.Y + If(lblSelAccount.Visible, lblSelAccount.Height, 0) + 6 * Z
+                  - cmbPanelAccount:
+                      Control: Classic/ComboBox@2.4.0
+                      Properties:
+                        BorderColor: =RGBA(190, 196, 202, 1)
+                        BorderThickness: =1
+                        ChevronBackground: =RGBA(0, 0, 0, 0)
+                        ChevronFill: =RGBA(96, 96, 96, 1)
+                        ChevronHoverBackground: =RGBA(232, 240, 250, 1)
+                        ChevronHoverFill: =RGBA(56, 96, 178, 1)
+                        DefaultSelectedItems: =Filter('Chargeable Cost Accounts', ID = ApprovalsGallery.Selected.'Cost Account'.Id && 'Project Class'.Value = cmbPanelProject.Selected.'Project Class'.Value)
+                        DisplayFields: =["Cost_x0020_Account_x0020_Number_"]
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =48 * Z
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(186, 202, 226, 1)
+                        InputTextPlaceholder: ="Choose a cost account"
+                        Items: =Sort(Filter('Chargeable Cost Accounts', 'Project Class'.Value = cmbPanelProject.Selected.'Project Class'.Value), 'Cost Account Number', SortOrder.Ascending)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5 * Z, 0)
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        PressedColor: =RGBA(255, 255, 255, 1)
+                        PressedFill: =RGBA(0, 18, 107, 1)
+                        SearchFields: =["Cost_x0020_Account_x0020_Number_"]
+                        SelectMultiple: =false
+                        SelectionColor: =RGBA(255, 255, 255, 1)
+                        SelectionFill: =RGBA(56, 96, 178, 1)
+                        SelectionTagColor: =RGBA(30, 30, 30, 1)
+                        SelectionTagFill: =RGBA(0, 0, 0, 0)
+                        Size: =16 * Z
+                        Tooltip: ="Cost account"
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =cmbPanelProject.Y + cmbPanelProject.Height + 6 * Z
+                  - lblSelCommentsHead:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =16 * Z
+                        Text: ="Comments"
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelSubmitted.Y + lblSelSubmitted.Height + 8 * Z
+                  - btnPanelSaveAcct:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(255, 255, 255, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        Fill: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =44 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =RGBA(255, 255, 255, 1)
+                        HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+                        OnSelect: |-
+                          =If(!IsBlank(ApprovalsGallery.Selected.ID) && !IsBlank(cmbPanelProject.Selected.ID) && !IsBlank(cmbPanelAccount.Selected.ID) && (cmbPanelProject.Selected.ID <> Coalesce(ApprovalsGallery.Selected.Project.Id, -1) || cmbPanelAccount.Selected.ID <> Coalesce(ApprovalsGallery.Selected.'Cost Account'.Id, -1)), With({r: LookUp('Financial Submissions', ID = ApprovalsGallery.Selected.ID)}, Patch('Financial Submissions', r, {Project: {Id: cmbPanelProject.Selected.ID, Value: cmbPanelProject.Selected.'Project Name'}, 'Cost Account': {Id: cmbPanelAccount.Selected.ID, Value: cmbPanelAccount.Selected.'Cost Account Number and Description'}})); Refresh('Financial Submissions'); Notify("Project and cost account saved", NotificationType.Success))
+                        PressedBorderColor: =Self.Fill
+                        PressedColor: =Self.Fill
+                        PressedFill: =Self.Color
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =16 * Z
+                        Text: ="Save project and cost account"
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID) && !IsBlank(cmbPanelProject.Selected.ID) && !IsBlank(cmbPanelAccount.Selected.ID) && (cmbPanelProject.Selected.ID <> Coalesce(ApprovalsGallery.Selected.Project.Id, -1) || cmbPanelAccount.Selected.ID <> Coalesce(ApprovalsGallery.Selected.'Cost Account'.Id, -1))
+                        Width: =Min(360 * Z, Parent.Width - 64 * Z)
+                        X: =0 + 32 * Z
+                        Y: =cmbPanelAccount.Y + cmbPanelAccount.Height + 8 * Z
+                  - btnOpenOffice:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(255, 255, 255, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        Fill: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =64 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =RGBA(255, 255, 255, 1)
+                        HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+                        OnSelect: |-
+                          =Launch(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).AbsoluteUri, {web: "1"})
+                        PressedBorderColor: =Self.Fill
+                        PressedColor: =Self.Fill
+                        PressedFill: =Self.Color
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =18 * Z
+                        Text: ="Open in " & If(EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".docx") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".doc"), "Word", EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".xlsx") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".xlsm") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".xls"), "Excel", EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".pptx") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".ppt"), "PowerPoint") & " for the web  ›"
+                        Visible: =CountRows(ApprovalsGallery.Selected.Attachments) > 0 && (EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".docx") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".doc") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".xlsx") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".xlsm") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".xls") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".pptx") || EndsWith(Lower(Last(FirstN(ApprovalsGallery.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(ApprovalsGallery.Selected.Attachments))))).DisplayName), ".ppt"))
+                        Width: =Min(420 * Z, Parent.Width - 64 * Z)
+                        X: =0 + (Parent.Width - Self.Width) / 2
+                        Y: =chkPanelApproved.Y + chkPanelApproved.Height + 8 * Z + If(CountRows(ApprovalsGallery.Selected.Attachments) > 1, 44 * Z, 0) + 24 * Z
+                  - txtPanelComments:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        BorderColor: =RGBA(190, 196, 202, 1)
+                        BorderThickness: =1
+                        Color: =RGBA(30, 30, 30, 1)
+                        Default: =ApprovalsGallery.Selected.Comments
+                        DelayOutput: =true
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =96 * Z
+                        HintText: ="Add a comment"
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(255, 255, 255, 1)
+                        MaxLength: =DataSourceInfo([@'Financial Submissions'], DataSourceInfo.MaxLength, Comments)
+                        Mode: =TextMode.MultiLine
+                        PaddingBottom: =8 * Z
+                        PaddingLeft: =12 * Z
+                        PaddingRight: =12 * Z
+                        PaddingTop: =8 * Z
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =16 * Z
+                        Tooltip: ="Comments"
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelCommentsHead.Y + lblSelCommentsHead.Height
+                  - btnPanelSaveComment:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(255, 255, 255, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        Fill: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =30 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =RGBA(255, 255, 255, 1)
+                        HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+                        OnSelect: |-
+                          =If(!IsBlank(ApprovalsGallery.Selected.ID) && txtPanelComments.Text <> Coalesce(ApprovalsGallery.Selected.Comments, ""), With({r: LookUp('Financial Submissions', ID = ApprovalsGallery.Selected.ID)}, Patch('Financial Submissions', r, {Comments: txtPanelComments.Text})); Refresh('Financial Submissions'); Notify("Comment saved", NotificationType.Success))
+                        PressedBorderColor: =Self.Fill
+                        PressedColor: =Self.Fill
+                        PressedFill: =Self.Color
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =14 * Z
+                        Text: ="Save comment"
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID) && txtPanelComments.Text <> Coalesce(ApprovalsGallery.Selected.Comments, "")
+                        Width: =170 * Z
+                        X: =0 + Parent.Width - 32 * Z - Self.Width
+                        Y: =lblSelCommentsHead.Y
+                  - icoPanelDelete:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(96, 96, 96, 1)
+                        FocusedBorderThickness: =2 * Z
+                        Height: =40 * Z
+                        HoverColor: =RGBA(168, 0, 0, 1)
+                        Icon: =Icon.Trash
+                        OnSelect: |-
+                          =UpdateContext({locDelId: ApprovalsGallery.Selected.ID})
+                        Tooltip: ="Delete this submission"
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID)
+                        Width: =40 * Z
+                        X: =0 + Parent.Width - 32 * Z - Self.Width
+                        Y: =0 + 32 * Z
+                  - rectDelBox:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(168, 0, 0, 1)
+                        BorderThickness: =2
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FocusedBorderThickness: =2 * Z
+                        Height: =236 * Z
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID) && locDelId = ApprovalsGallery.Selected.ID
+                        Width: =Parent.Width - 32 * Z
+                        X: =0 + 16 * Z
+                        Y: =0 + 16 * Z
+                  - lblDelTitle:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =40 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =20 * Z
+                        Text: ="Delete this submission?"
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID) && locDelId = ApprovalsGallery.Selected.ID
+                        Width: =Parent.Width - 72 * Z
+                        Wrap: =false
+                        X: =0 + 36 * Z
+                        Y: =0 + 28 * Z
+                  - lblDelBody:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(40, 40, 40, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =104 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =15 * Z
+                        Text: ="This removes " & lblSelVendor.Text & " and its attachments for everyone. It can only be brought back from the SharePoint recycle bin."
+                        VerticalAlign: =VerticalAlign.Top
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID) && locDelId = ApprovalsGallery.Selected.ID
+                        Width: =Parent.Width - 72 * Z
+                        X: =0 + 36 * Z
+                        Y: =0 + 68 * Z
+                  - btnDelYes:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(255, 255, 255, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        Fill: =RGBA(168, 0, 0, 1)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =44 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =RGBA(255, 255, 255, 1)
+                        HoverFill: =ColorFade(RGBA(168, 0, 0, 1), -20%)
+                        OnSelect: |-
+                          =If(!IsBlank(ApprovalsGallery.Selected.ID) && locDelId = ApprovalsGallery.Selected.ID, IfError(Remove('Financial Submissions', LookUp('Financial Submissions', ID = ApprovalsGallery.Selected.ID)), Notify("Could not delete: " & FirstError.Message, NotificationType.Error), Notify("Submission deleted", NotificationType.Success)); UpdateContext({locDelId: Blank()}); Refresh('Financial Submissions'))
+                        PressedBorderColor: =Self.Fill
+                        PressedColor: =Self.Fill
+                        PressedFill: =Self.Color
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =16 * Z
+                        Text: ="Delete"
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID) && locDelId = ApprovalsGallery.Selected.ID
+                        Width: =140 * Z
+                        X: =0 + 36 * Z
+                        Y: =0 + 184 * Z
+                  - btnDelNo:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(205, 210, 215, 1)
+                        BorderThickness: =1
+                        Color: =RGBA(40, 40, 40, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =44 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =RGBA(40, 40, 40, 1)
+                        HoverFill: =RGBA(240, 242, 245, 1)
+                        OnSelect: |-
+                          =UpdateContext({locDelId: Blank()})
+                        PressedBorderColor: =Self.Fill
+                        PressedColor: =RGBA(40, 40, 40, 1)
+                        PressedFill: =RGBA(225, 228, 232, 1)
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =16 * Z
+                        Text: ="Cancel"
+                        Visible: =!IsBlank(ApprovalsGallery.Selected.ID) && locDelId = ApprovalsGallery.Selected.ID
+                        Width: =140 * Z
+                        X: =0 + 188 * Z
+                        Y: =0 + 184 * Z
+      - btnFASend:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisplayMode: =DisplayMode.Edit
+            Fill: =RGBA(40, 122, 54, 1)
+            Height: =44 * Z
+            HoverFill: =ColorFade(RGBA(40, 122, 54, 1), -15%)
+            OnSelect: |-
+              =UpdateContext({locFASend: true, locFASending: false, locFAResult: "", locFARecent: !IsBlank(gFASentAt) && DateDiff(gFASentAt, Now(), TimeUnit.Minutes) < 5})
+            PressedFill: =ColorFade(RGBA(40, 122, 54, 1), -25%)
+            RadiusBottomLeft: =22 * Z
+            RadiusBottomRight: =22 * Z
+            RadiusTopLeft: =22 * Z
+            RadiusTopRight: =22 * Z
+            Size: =16 * Z
+            Text: ="Send to bookkeeper"
+            Visible: =true
+            Width: =260 * Z
+            X: =(ApprovalsGallery.Width - 260 * Z) / 2
+            Y: =Label4.Y + 106 * Z
+      - rectFADim:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(0, 0, 0, 0.45)
+            Height: =Parent.Height
+            Visible: =locFASend
+            Width: =Parent.Width
+            X: =0
+            Y: =0
+      - crdFASend:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            BorderThickness: =1
+            DisabledBorderColor: =RGBA(205, 210, 215, 1)
+            DisabledFill: =RGBA(255, 255, 255, 1)
+            DisplayMode: =DisplayMode.Disabled
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =btnFASendGo.Y + btnFASendGo.Height + 20 * Z - crdFASend.Y
+            OnSelect: =false
+            RadiusBottomLeft: =10 * Z
+            RadiusBottomRight: =10 * Z
+            RadiusTopLeft: =10 * Z
+            RadiusTopRight: =10 * Z
+            Text: =""
+            Visible: =locFASend
+            Width: =Min(480 * Z, Parent.Width - 24 * Z)
+            X: =(Parent.Width - Min(480 * Z, Parent.Width - 24 * Z)) / 2
+            Y: =If(Parent.Width >= 1000, HB + 70 * Z, Label4.Y - 250 * Z)
+      - lblFASendTitle:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Left
+            Color: =RGBA(40, 40, 40, 1)
+            FontWeight: =FontWeight.Semibold
+            Height: =36 * Z
+            Italic: =false
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =20 * Z
+            Text: ="Send to the bookkeeper"
+            VerticalAlign: =VerticalAlign.Middle
+            Visible: =locFASend
+            Width: =Min(480 * Z, Parent.Width - 24 * Z) - 56 * Z
+            Wrap: =false
+            X: =(Parent.Width - Min(480 * Z, Parent.Width - 24 * Z)) / 2 + 28 * Z
+            Y: =If(Parent.Width >= 1000, HB + 70 * Z, Label4.Y - 250 * Z) + 20 * Z
+      - lblFASendDate:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Left
+            Color: =RGBA(96, 96, 96, 1)
+            FontWeight: =FontWeight.Normal
+            Height: =28 * Z
+            Italic: =false
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =15 * Z
+            Text: ="Dated " & Text(Today(), "[$-en-US]mmmm d, yyyy")
+            VerticalAlign: =VerticalAlign.Middle
+            Visible: =locFASend
+            Width: =Min(480 * Z, Parent.Width - 24 * Z) - 56 * Z
+            Wrap: =false
+            X: =(Parent.Width - Min(480 * Z, Parent.Width - 24 * Z)) / 2 + 28 * Z
+            Y: =If(Parent.Width >= 1000, HB + 70 * Z, Label4.Y - 250 * Z) + 58 * Z
+      - lblFASendInfo:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Left
+            AutoHeight: =true
+            Color: =RGBA(40, 40, 40, 1)
+            FontWeight: =FontWeight.Normal
+            Height: =96 * Z
+            Italic: =false
+            LineHeight: =1.4
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =15 * Z
+            Text: |-
+              =With({a: CountRows(Filter(Filter('Financial Submissions', Processed = false), Approved = true && 'Type of thing'.Value <> "Income")), t: Coalesce(Sum(Filter(Filter('Financial Submissions', Processed = false), Approved = true && 'Type of thing'.Value <> "Income"), Amount), 0), w: CountRows(Filter(Filter('Financial Submissions', Processed = false), Approved <> true && 'Type of thing'.Value <> "Income")), i: CountRows(Filter(Filter('Financial Submissions', Processed = false), Approved = true && 'Type of thing'.Value = "Income")), ti: Coalesce(Sum(Filter(Filter('Financial Submissions', Processed = false), Approved = true && 'Type of thing'.Value = "Income"), Amount), 0)}, If(locFARecent, "A send started at " & Text(gFASentAt, "[$-en-US]h:mm AM/PM") & " is still running. Wait for the email, then try again.", If(a = 0 && i = 0, "Nothing approved and waiting to go.", If(a = 0, "Nothing approved here.", a & If(a = 1, " approved item", " approved items") & " ready to send, " & Text(t, "[$-en-US]$#,##0.00") & " in all.")) & If(w > 0, Char(10) & w & " not approved yet. " & If(w = 1, "It stays", "They stay") & " here until approved.") & If(i > 0, Char(10) & i & If(i = 1, " approved income item", " approved income items") & " from Income Approvals, " & Text(ti, "[$-en-US]$#,##0.00") & ", " & If(i = 1, "goes", "go") & " in the same send.")))
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =locFASend
+            Width: =Min(480 * Z, Parent.Width - 24 * Z) - 56 * Z
+            Wrap: =true
+            X: =(Parent.Width - Min(480 * Z, Parent.Width - 24 * Z)) / 2 + 28 * Z
+            Y: =If(Parent.Width >= 1000, HB + 70 * Z, Label4.Y - 250 * Z) + 96 * Z
+      - lblFASendResult:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Left
+            AutoHeight: =true
+            Color: =If(locFASending, RGBA(96, 96, 96, 1), StartsWith(locFAResult, "That did not work"), RGBA(168, 0, 0, 1), RGBA(0, 110, 0, 1))
+            FontWeight: =FontWeight.Semibold
+            Height: =68 * Z
+            Italic: =false
+            LineHeight: =1.35
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =14 * Z
+            Text: =If(locFASending, "Starting. Please leave this open.", locFAResult)
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =locFASend
+            Width: =Min(480 * Z, Parent.Width - 24 * Z) - 56 * Z
+            Wrap: =true
+            X: =(Parent.Width - Min(480 * Z, Parent.Width - 24 * Z)) / 2 + 28 * Z
+            Y: =lblFASendInfo.Y + lblFASendInfo.Height + 4 * Z
+      - btnFASendClose:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            BorderThickness: =1
+            Color: =RGBA(40, 40, 40, 1)
+            DisplayMode: =DisplayMode.Edit
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =52 * Z
+            HoverColor: =RGBA(40, 40, 40, 1)
+            HoverFill: =RGBA(240, 242, 245, 1)
+            OnSelect: |-
+              =UpdateContext({locFASend: false, locFASending: false}); Refresh('Financial Submissions')
+            PressedColor: =RGBA(40, 40, 40, 1)
+            PressedFill: =RGBA(225, 228, 232, 1)
+            RadiusBottomLeft: =8 * Z
+            RadiusBottomRight: =8 * Z
+            RadiusTopLeft: =8 * Z
+            RadiusTopRight: =8 * Z
+            Size: =18 * Z
+            Text: =If(IsBlank(locFAResult), "Cancel", "Close")
+            Visible: =locFASend
+            Width: =(Min(480 * Z, Parent.Width - 24 * Z) - 76 * Z) / 2
+            X: =(Parent.Width - Min(480 * Z, Parent.Width - 24 * Z)) / 2 + 28 * Z
+            Y: =lblFASendResult.Y + lblFASendResult.Height + 8 * Z
+      - btnFASendGo:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledColor: =RGBA(150, 156, 162, 1)
+            DisabledFill: =RGBA(232, 236, 240, 1)
+            DisplayMode: |-
+              =If(locFASending || locFARecent || !IsBlank(locFAResult) || With({a: CountRows(Filter(Filter('Financial Submissions', Processed = false), Approved = true && 'Type of thing'.Value <> "Income")), i: CountRows(Filter(Filter('Financial Submissions', Processed = false), Approved = true && 'Type of thing'.Value = "Income"))}, a + i = 0), DisplayMode.Disabled, DisplayMode.Edit)
+            Fill: =RGBA(40, 122, 54, 1)
+            Height: =52 * Z
+            HoverFill: =ColorFade(RGBA(40, 122, 54, 1), -15%)
+            OnSelect: |-
+              =UpdateContext({locFASending: true, locFAResult: ""}); UpdateContext({locFAResult: IfError(__MS_WEEKLY_RUN__, "That did not work: " & FirstError.Message)}); If(!StartsWith(locFAResult, "That did not work"), Set(gFASentAt, Now())); UpdateContext({locFASending: false})
+            RadiusBottomLeft: =8 * Z
+            RadiusBottomRight: =8 * Z
+            RadiusTopLeft: =8 * Z
+            RadiusTopRight: =8 * Z
+            Size: =18 * Z
+            Text: ="Send"
+            Visible: =locFASend
+            Width: =(Min(480 * Z, Parent.Width - 24 * Z) - 76 * Z) / 2
+            X: =(Parent.Width - Min(480 * Z, Parent.Width - 24 * Z)) / 2 + 28 * Z + (Min(480 * Z, Parent.Width - 24 * Z) - 76 * Z) / 2 + 20 * Z
+            Y: =lblFASendResult.Y + lblFASendResult.Height + 8 * Z

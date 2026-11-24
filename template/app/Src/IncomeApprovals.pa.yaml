@@ -1,0 +1,989 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  IncomeApprovals:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      Height: =If(Self.Width >= 1000, Max(App.Height, 640 * Z), 2330 * Z)
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+      OnVisible: =If(!(__MS_IS_INCOME_APPROVER__), Notify("That page is for approvers.", NotificationType.Warning); Navigate(LandingPage))
+    Children:
+      - gallery_donations:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_ThreeTextVariant_ver5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Height: =If(Parent.Width >= 1000, Parent.Height - HB - 120 * Z, 640 * Z)
+            Items: =Filter('Financial Submissions', 'Type of thing'.Value = "Income" && Processed=false)
+            OnSelect: |-
+              =UpdateContext({locAtt: 1}); Reset(cmbPanelAccountDon); Reset(txtPanelCommentsDon)
+            TemplateFill: =If(ThisItem.IsSelected, RGBA(232, 240, 250, 1), RGBA(0, 0, 0, 0))
+            TemplateSize: =140 * Z
+            Width: =If(Parent.Width >= 1000, RoundDown(Parent.Width / 2, 0), Parent.Width)
+            Y: =HB
+          Children:
+            - Title16_3:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Color: =If(IsBlank(ThisItem.'Cost Account'.Value), RGBA(168, 0, 0, 1), RGBA(0, 0, 0, 1))
+                  Font: =Font.'Open Sans'
+                  Height: =30 * Z
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16 * Z
+                  Text: =If(IsBlank(ThisItem.'Cost Account'.Value), "No project or cost account", If(IsBlank(ThisItem.'Cost Account'.Value), "", ThisItem.Project.Value & " - " & ThisItem.'Cost Account'.Value))
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =Parent.TemplateWidth - 250 * Z
+                  Wrap: =false
+                  X: =20 * Z
+                  Y: =90 * Z
+            - Subtitle13_1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Color: =RGBA(168, 0, 0, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =40 * Z
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =22 * Z
+                  Text: =ThisItem.Vendor
+                  Width: =Parent.TemplateWidth - 290 * Z
+                  Wrap: =false
+                  X: =20 * Z
+                  Y: =12 * Z
+            - Body6_1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =Self.Size * 1.8
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16 * Z
+                  Text: |-
+                    =Text(ThisItem.Amount, "[$-en-US]$ #,###.00")
+                  VerticalAlign: =VerticalAlign.Top
+                  Visible: =false
+                  Width: =Title16_3.Width
+                  X: =Title16_3.X
+                  Y: =Subtitle13_1.Y + Subtitle13_1.Height
+            - Separator16_1:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Fill: =RGBA(220, 224, 228, 1)
+                  FocusedBorderThickness: =2 * Z
+                  Height: =1 * Z
+                  OnSelect: =Select(Parent)
+                  Width: =Parent.TemplateWidth
+                  Y: =Parent.TemplateHeight - Self.Height
+            - Rectangle16_1:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Fill: =RGBA(0, 18, 107, 1)
+                  Height: =Parent.TemplateHeight - Separator16_1.Height
+                  OnSelect: =Select(Parent)
+                  Visible: =ThisItem.IsSelected
+                  Width: =4 * Z
+            - Title16_2:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Color: =RGBA(96, 96, 96, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =30 * Z
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16 * Z
+                  Text: =ThisItem.'Type of thing'.Value & If(IsBlank(ThisItem.'Income Date'), "", "  ·  " & Text(ThisItem.'Income Date', "mmm d, yyyy")) & "  ·  " & ThisItem.'Created By'.DisplayName
+                  Width: =Parent.TemplateWidth - 250 * Z
+                  Wrap: =false
+                  X: =20 * Z
+                  Y: =56 * Z
+            - Checkbox1_1:
+                Control: Classic/CheckBox@2.1.0
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  CheckboxBorderColor: =RGBA(54, 176, 75, 1)
+                  CheckboxSize: =34 * Z
+                  CheckmarkFill: =RGBA(0, 0, 0, 1)
+                  Color: =If(ThisItem.DonationRecorded, RGBA(0, 128, 0, 1), RGBA(96, 96, 96, 1))
+                  Default: =ThisItem.DonationRecorded
+                  FocusedBorderThickness: =2 * Z
+                  Font: =Font.'Open Sans'
+                  Height: =48 * Z
+                  HoverColor: =RGBA(0, 18, 107, 1)
+                  OnCheck: |-
+                    =If(!ThisItem.DonationRecorded, With({r: LookUp('Financial Submissions', ID = ThisItem.ID)}, Patch('Financial Submissions', r, {DonationRecorded: true, Approved: true})); Refresh('Financial Submissions'))
+                  OnSelect: =Select(Parent)
+                  OnUncheck: |-
+                    =If(ThisItem.DonationRecorded, With({r: LookUp('Financial Submissions', ID = ThisItem.ID)}, Patch('Financial Submissions', r, {DonationRecorded: false, Approved: false})); Refresh('Financial Submissions'))
+                  Size: =17 * Z
+                  Text: =If(ThisItem.DonationRecorded, "Completed", "Complete")
+                  Visible: |-
+                    =If(
+                        __MS_IS_INCOME_APPROVER__,
+                        true,
+                        false
+                    )
+                  Width: =160 * Z
+                  X: =Parent.TemplateWidth - 180 * Z
+                  Y: =72 * Z
+            - Body6_3:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Right
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Color: =RGBA(0, 128, 0, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =36 * Z
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =19 * Z
+                  Text: |-
+                    =Text(ThisItem.Amount, "[$-en-US]$ #,###.00")
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =240 * Z
+                  X: =Parent.TemplateWidth - 260 * Z
+                  Y: =18 * Z
+            - Subtitle13_3:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  Font: =Font.'Open Sans'
+                  FontWeight: =If(ThisItem.IsSelected, FontWeight.Semibold, FontWeight.Normal)
+                  Height: =Self.Size * 1.8
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14 * Z
+                  Text: =ThisItem.'Income Date'
+                  VerticalAlign: =VerticalAlign.Top
+                  Visible: =false
+                  Width: =Title16_3.Width
+                  X: =14 * Z
+                  Y: =105 * Z
+      - RectQuickActionBar5_1:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =RGBA(__MS_HEADER_RGB__, 1)
+            Height: =HB
+            Width: =Parent.Width
+      - LblAppName5_1:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 1)
+            Color: =RGBA(__MS_HEADER_TEXT_RGB__, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =HB
+            Size: =If(Phone, 28 * Z, 24 * Z)
+            Text: ="Open Income Approvals"
+            Width: =Parent.Width - Self.X - 140 * Z
+            X: =Max(If(Phone, 104 * Z, 84 * Z), (Parent.Width - 640 * Z) / 2 + 16 * Z)
+      - Icon9_2:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(__MS_HEADER_TEXT_RGB__, 1)
+            FocusedBorderThickness: =2 * Z
+            Height: =If(Phone, 76 * Z, 56 * Z)
+            Icon: =Icon.ArrowLeft
+            OnSelect: =Navigate(LandingPage)
+            PaddingBottom: =If(Phone, 16 * Z, 10 * Z)
+            PaddingLeft: =If(Phone, 16 * Z, 10 * Z)
+            PaddingRight: =If(Phone, 16 * Z, 10 * Z)
+            PaddingTop: =If(Phone, 16 * Z, 10 * Z)
+            Tooltip: ="Back"
+            Width: =If(Phone, 76 * Z, 56 * Z)
+            X: =22 * Z
+            Y: =(HB - Self.Height) / 2
+      - lblDonTotal:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =50 * Z
+            Size: =16 * Z
+            Text: |-
+              ="Total open income: " & Text(Sum(gallery_donations.AllItems, Amount), "[$-en-US]$#,##0.00")
+            Width: =gallery_donations.Width
+            Y: =gallery_donations.Y + gallery_donations.Height + 40 * Z
+      - PanelBgDon:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =RGBA(244, 246, 248, 1)
+            FocusedBorderThickness: =2 * Z
+            Height: =If(Parent.Width >= 1000, Parent.Height - HB, 1500 * Z)
+            Width: =Parent.Width - Self.X
+            X: =If(Parent.Width >= 1000, gallery_donations.Width, 0)
+            Y: =If(Parent.Width >= 1000, HB, lblDonTotal.Y + 60 * Z)
+      - icoRefreshDon:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(__MS_HEADER_TEXT_RGB__, 1)
+            FocusedBorderThickness: =2 * Z
+            Height: =If(Phone, 44 * Z, 36 * Z)
+            Icon: =Icon.Reload
+            OnSelect: =Refresh('Financial Submissions')
+            Tooltip: ="Refresh the list"
+            Width: =If(Phone, 44 * Z, 36 * Z)
+            X: =LblAppName5_1.X + Len(LblAppName5_1.Text) * If(Phone, 21.6 * Z, 18.5 * Z) + 14 * Z
+            Y: =(HB - Self.Height) / 2
+      - conPanelScrollDon:
+          Control: GroupContainer@1.5.0
+          Variant: AutoLayout
+          Properties:
+            DropShadow: =DropShadow.None
+            Height: =PanelBgDon.Height
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutOverflowY: =LayoutOverflow.Scroll
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Width: =PanelBgDon.Width
+            X: =PanelBgDon.X
+            Y: =PanelBgDon.Y
+          Children:
+            - conPanelDon:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  DropShadow: =DropShadow.None
+                  FillPortions: =0
+                  Height: =chkPanelApprovedDon.Y + chkPanelApprovedDon.Height + 8 * Z + If(CountRows(gallery_donations.Selected.Attachments) > 1, 44 * Z, 0) + If(pdfPreviewDon.Visible || imgPreviewDon.Visible, pdfPreviewDon.Height, If(CountRows(gallery_donations.Selected.Attachments) > 0, 110 * Z, 0)) + 24 * Z
+                  LayoutMinHeight: =16
+                  LayoutMinWidth: =16
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                Children:
+                  - lblSelVendorDon:
+                      Control: Label@2.5.1
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(56, 96, 178, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =50 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =28 * Z
+                        Text: =If(IsBlank(gallery_donations.Selected.ID), "No open income", gallery_donations.Selected.Vendor)
+                        Width: =Parent.Width - 64 * Z - 48 * Z
+                        X: =0 + 32 * Z
+                        Y: =0 + 28 * Z
+                  - lblSelDetailsDon:
+                      Control: Label@2.5.1
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(96, 96, 96, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =36 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =18 * Z
+                        Text: =If(IsBlank(gallery_donations.Selected.ID), "", Coalesce(gallery_donations.Selected.'Income Type'.Value, "Income") & " · " & Text(gallery_donations.Selected.Amount, "[$-en-US]$#,##0.00") & If(IsBlank(gallery_donations.Selected.'Income Date'), "", " · Income date " & Text(gallery_donations.Selected.'Income Date', "[$-en-US]mm/dd/yyyy")))
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelVendorDon.Y + lblSelVendorDon.Height
+                  - lblSelAccountDon:
+                      Control: Label@2.5.1
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =36 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =18 * Z
+                        Text: =If(IsBlank(gallery_donations.Selected.ID) || !IsBlank(gallery_donations.Selected.'Cost Account'.Value), "", "No cost account")
+                        Visible: =!IsBlank(gallery_donations.Selected.ID) && IsBlank(gallery_donations.Selected.'Cost Account'.Value)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelDetailsDon.Y + lblSelDetailsDon.Height
+                  - lblSelSubmittedDon:
+                      Control: Label@2.5.1
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(96, 96, 96, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =32 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =16 * Z
+                        Text: =If(IsBlank(gallery_donations.Selected.ID), "", "Submitted by " & gallery_donations.Selected.'Created By'.DisplayName & " on " & Text(gallery_donations.Selected.Created, "[$-en-US]mm/dd/yyyy"))
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =cmbPanelAccountDon.Y + cmbPanelAccountDon.Height + 8 * Z + If(btnPanelSaveAcctDon.Visible, 52 * Z, 0)
+                  - lblSelAttachHeadDon:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =16 * Z
+                        Text: =If(CountRows(gallery_donations.Selected.Attachments) = 0, "No attachments", "Attachments (" & CountRows(gallery_donations.Selected.Attachments) & ")")
+                        Visible: =!IsBlank(gallery_donations.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelOpenItemDon.Y + lblSelOpenItemDon.Height + 8 * Z
+                  - lblSelAttach1Don:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Left
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(0, 103, 184, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =30 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: =Launch(Last(FirstN(gallery_donations.Selected.Attachments, 1)).AbsoluteUri)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =16 * Z
+                        Text: =Last(FirstN(gallery_donations.Selected.Attachments, 1)).DisplayName
+                        Underline: =true
+                        Visible: =CountRows(gallery_donations.Selected.Attachments) >= 1
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelAttachHeadDon.Y + lblSelAttachHeadDon.Height + 0 * Z
+                  - lblSelAttach2Don:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Left
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(0, 103, 184, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =30 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: =Launch(Last(FirstN(gallery_donations.Selected.Attachments, 2)).AbsoluteUri)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =16 * Z
+                        Text: =Last(FirstN(gallery_donations.Selected.Attachments, 2)).DisplayName
+                        Underline: =true
+                        Visible: =CountRows(gallery_donations.Selected.Attachments) >= 2
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelAttachHeadDon.Y + lblSelAttachHeadDon.Height + 34 * Z
+                  - lblSelAttach3Don:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Left
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(0, 103, 184, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =30 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: =Launch(Last(FirstN(gallery_donations.Selected.Attachments, 3)).AbsoluteUri)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =16 * Z
+                        Text: =Last(FirstN(gallery_donations.Selected.Attachments, 3)).DisplayName
+                        Underline: =true
+                        Visible: =CountRows(gallery_donations.Selected.Attachments) >= 3
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelAttachHeadDon.Y + lblSelAttachHeadDon.Height + 68 * Z
+                  - lblSelOpenItemDon:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Left
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(0, 103, 184, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =30 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: =Launch("__MS_LISTS_SITE__/Lists/Financial%20Submissions/DispForm.aspx?ID=" & gallery_donations.Selected.ID)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =15 * Z
+                        Text: =If(CountRows(gallery_donations.Selected.Attachments) > 3, "Open the item in SharePoint to see all " & CountRows(gallery_donations.Selected.Attachments) & " attachments", "Open the item in SharePoint")
+                        Underline: =true
+                        Visible: =!IsBlank(gallery_donations.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =txtPanelCommentsDon.Y + txtPanelCommentsDon.Height + 12 * Z
+                  - rectApproveDividerDon:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Fill: =RGBA(205, 210, 215, 1)
+                        FocusedBorderThickness: =2 * Z
+                        Height: =1 * Z
+                        Visible: =!IsBlank(gallery_donations.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelAttachHeadDon.Y + lblSelAttachHeadDon.Height + Min(CountRows(gallery_donations.Selected.Attachments), 3) * 34 * Z + 12 * Z
+                  - chkPanelApprovedDon:
+                      Control: Classic/CheckBox@2.1.0
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        CheckboxBorderColor: =RGBA(54, 176, 75, 1)
+                        CheckboxSize: =56 * Z
+                        CheckmarkFill: =RGBA(0, 0, 0, 1)
+                        Default: =gallery_donations.Selected.DonationRecorded
+                        FocusedBorderThickness: =2 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =80 * Z
+                        HoverColor: =RGBA(0, 18, 107, 1)
+                        OnCheck: |-
+                          =If(!gallery_donations.Selected.DonationRecorded, With({r: LookUp('Financial Submissions', ID = gallery_donations.Selected.ID)}, Patch('Financial Submissions', r, {DonationRecorded: true, Approved: true})); Refresh('Financial Submissions'))
+                        OnUncheck: |-
+                          =If(gallery_donations.Selected.DonationRecorded, With({r: LookUp('Financial Submissions', ID = gallery_donations.Selected.ID)}, Patch('Financial Submissions', r, {DonationRecorded: false, Approved: false})); Refresh('Financial Submissions'))
+                        Size: =24 * Z
+                        Text: ="Completed"
+                        Visible: |-
+                          =!IsBlank(gallery_donations.Selected.ID) && If(
+                              __MS_IS_INCOME_APPROVER__,
+                              true,
+                              false
+                          )
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =rectApproveDividerDon.Y + 16 * Z
+                  - pdfPreviewDon:
+                      Control: PDFViewer@2.5.0
+                      Properties:
+                        BorderColor: =RGBA(205, 210, 215, 1)
+                        Document: =Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).Value
+                        Fill: =RGBA(255, 255, 255, 1)
+                        Height: =If(App.Width >= 1000, Max(520 * Z, conPanelScrollDon.Height - Self.Y - 24 * Z), 520 * Z)
+                        Visible: =CountRows(gallery_donations.Selected.Attachments) > 0 && EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".pdf")
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =chkPanelApprovedDon.Y + chkPanelApprovedDon.Height + 8 * Z + If(CountRows(gallery_donations.Selected.Attachments) > 1, 44 * Z, 0)
+                  - imgPreviewDon:
+                      Control: Image@2.2.3
+                      Properties:
+                        BorderColor: =RGBA(205, 210, 215, 1)
+                        BorderThickness: =1 * Z
+                        Fill: =RGBA(255, 255, 255, 1)
+                        Height: =If(App.Width >= 1000, Max(520 * Z, conPanelScrollDon.Height - Self.Y - 24 * Z), 520 * Z)
+                        Image: =Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).Value
+                        Visible: =CountRows(gallery_donations.Selected.Attachments) > 0 && !(EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".pdf")) && (EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".png") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".jpg") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".jpeg") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".gif") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".bmp") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".webp"))
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =chkPanelApprovedDon.Y + chkPanelApprovedDon.Height + 8 * Z + If(CountRows(gallery_donations.Selected.Attachments) > 1, 44 * Z, 0)
+                  - lblPrevAttDon:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Left
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =If(Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))) > 1, RGBA(0, 103, 184, 1), RGBA(166, 166, 166, 1))
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =36 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: |-
+                          =UpdateContext({locAtt: Max(1, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))) - 1)})
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =16 * Z
+                        Text: ="‹ Previous"
+                        Underline: =true
+                        Visible: =CountRows(gallery_donations.Selected.Attachments) > 1
+                        Width: =130 * Z
+                        X: =0 + 32 * Z
+                        Y: =chkPanelApprovedDon.Y + chkPanelApprovedDon.Height + 8 * Z
+                  - lblAttPosDon:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(96, 96, 96, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =36 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =16 * Z
+                        Text: |-
+                          =Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))) & " of " & CountRows(gallery_donations.Selected.Attachments) & ": " & Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName
+                        Visible: =CountRows(gallery_donations.Selected.Attachments) > 1
+                        Width: =Parent.Width - 324 * Z
+                        Wrap: =false
+                        X: =0 + 162 * Z
+                        Y: =chkPanelApprovedDon.Y + chkPanelApprovedDon.Height + 8 * Z
+                  - lblNextAttDon:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Right
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =If(Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))) < CountRows(gallery_donations.Selected.Attachments), RGBA(0, 103, 184, 1), RGBA(166, 166, 166, 1))
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        DisabledFill: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Normal
+                        Height: =36 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =ColorFade(Self.Color, -30%)
+                        HoverFill: =RGBA(0, 0, 0, 0)
+                        OnSelect: |-
+                          =UpdateContext({locAtt: Min(CountRows(gallery_donations.Selected.Attachments), Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))) + 1)})
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        PressedBorderColor: =Self.Fill
+                        PressedFill: =RGBA(0, 0, 0, 0)
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =16 * Z
+                        Text: ="Next ›"
+                        Underline: =true
+                        Visible: =CountRows(gallery_donations.Selected.Attachments) > 1
+                        Width: =130 * Z
+                        X: =0 + Parent.Width - 162 * Z
+                        Y: =chkPanelApprovedDon.Y + chkPanelApprovedDon.Height + 8 * Z
+                  - lblNoPreviewDon:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(96, 96, 96, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =60 * Z
+                        Italic: =true
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =16 * Z
+                        Text: ="No preview for this kind of file. Use its link above to open it."
+                        Visible: =(CountRows(gallery_donations.Selected.Attachments) > 0 && !(EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".pdf")) && !(EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".png") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".jpg") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".jpeg") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".gif") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".bmp") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".webp"))) && !(EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".docx") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".doc") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".xlsx") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".xlsm") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".xls") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".pptx") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".ppt"))
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =chkPanelApprovedDon.Y + chkPanelApprovedDon.Height + 8 * Z + If(CountRows(gallery_donations.Selected.Attachments) > 1, 44 * Z, 0)
+                  - lblSelCommentsHeadDon:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =16 * Z
+                        Text: ="Comments"
+                        Visible: =!IsBlank(gallery_donations.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelSubmittedDon.Y + lblSelSubmittedDon.Height + 8 * Z
+                  - btnOpenOfficeDon:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(255, 255, 255, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        Fill: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =64 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =RGBA(255, 255, 255, 1)
+                        HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+                        OnSelect: |-
+                          =Launch(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).AbsoluteUri, {web: "1"})
+                        PressedBorderColor: =Self.Fill
+                        PressedColor: =Self.Fill
+                        PressedFill: =Self.Color
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =18 * Z
+                        Text: ="Open in " & If(EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".docx") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".doc"), "Word", EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".xlsx") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".xlsm") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".xls"), "Excel", EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".pptx") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".ppt"), "PowerPoint") & " for the web  ›"
+                        Visible: =CountRows(gallery_donations.Selected.Attachments) > 0 && (EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".docx") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".doc") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".xlsx") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".xlsm") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".xls") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".pptx") || EndsWith(Lower(Last(FirstN(gallery_donations.Selected.Attachments, Max(1, Min(Coalesce(locAtt, 1), CountRows(gallery_donations.Selected.Attachments))))).DisplayName), ".ppt"))
+                        Width: =Min(420 * Z, Parent.Width - 64 * Z)
+                        X: =0 + (Parent.Width - Self.Width) / 2
+                        Y: =chkPanelApprovedDon.Y + chkPanelApprovedDon.Height + 8 * Z + If(CountRows(gallery_donations.Selected.Attachments) > 1, 44 * Z, 0) + 24 * Z
+                  - cmbPanelAccountDon:
+                      Control: Classic/ComboBox@2.4.0
+                      Properties:
+                        BorderColor: =RGBA(190, 196, 202, 1)
+                        BorderThickness: =1
+                        ChevronBackground: =RGBA(0, 0, 0, 0)
+                        ChevronFill: =RGBA(96, 96, 96, 1)
+                        ChevronHoverBackground: =RGBA(232, 240, 250, 1)
+                        ChevronHoverFill: =RGBA(56, 96, 178, 1)
+                        DefaultSelectedItems: =Filter('Chargeable Cost Accounts', ID = gallery_donations.Selected.'Cost Account'.Id)
+                        DisplayFields: =["Cost_x0020_Account_x0020_Number_"]
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =48 * Z
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(186, 202, 226, 1)
+                        InputTextPlaceholder: ="Choose a cost account"
+                        Items: =Sort(Filter('Chargeable Cost Accounts', 'Project Class'.Value = "Income"), 'Cost Account Number', SortOrder.Ascending)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5 * Z, 0)
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        PressedColor: =RGBA(255, 255, 255, 1)
+                        PressedFill: =RGBA(0, 18, 107, 1)
+                        SearchFields: =["Cost_x0020_Account_x0020_Number_"]
+                        SelectMultiple: =false
+                        SelectionColor: =RGBA(255, 255, 255, 1)
+                        SelectionFill: =RGBA(56, 96, 178, 1)
+                        SelectionTagColor: =RGBA(30, 30, 30, 1)
+                        SelectionTagFill: =RGBA(0, 0, 0, 0)
+                        Size: =16 * Z
+                        Tooltip: ="Cost account"
+                        Visible: =!IsBlank(gallery_donations.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelAccountDon.Y + If(lblSelAccountDon.Visible, lblSelAccountDon.Height, 0) + 6 * Z
+                  - btnPanelSaveAcctDon:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(255, 255, 255, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        Fill: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =44 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =RGBA(255, 255, 255, 1)
+                        HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+                        OnSelect: |-
+                          =If(!IsBlank(gallery_donations.Selected.ID) && !IsBlank(cmbPanelAccountDon.Selected.ID) && cmbPanelAccountDon.Selected.ID <> Coalesce(gallery_donations.Selected.'Cost Account'.Id, -1), With({r: LookUp('Financial Submissions', ID = gallery_donations.Selected.ID)}, Patch('Financial Submissions', r, {'Cost Account': {Id: cmbPanelAccountDon.Selected.ID, Value: cmbPanelAccountDon.Selected.'Cost Account Number and Description'}})); Refresh('Financial Submissions'); Notify("Cost account saved", NotificationType.Success))
+                        PressedBorderColor: =Self.Fill
+                        PressedColor: =Self.Fill
+                        PressedFill: =Self.Color
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =16 * Z
+                        Text: ="Save cost account"
+                        Visible: =!IsBlank(gallery_donations.Selected.ID) && !IsBlank(cmbPanelAccountDon.Selected.ID) && cmbPanelAccountDon.Selected.ID <> Coalesce(gallery_donations.Selected.'Cost Account'.Id, -1)
+                        Width: =Min(360 * Z, Parent.Width - 64 * Z)
+                        X: =0 + 32 * Z
+                        Y: =cmbPanelAccountDon.Y + cmbPanelAccountDon.Height + 8 * Z
+                  - txtPanelCommentsDon:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        BorderColor: =RGBA(190, 196, 202, 1)
+                        BorderThickness: =1
+                        Color: =RGBA(30, 30, 30, 1)
+                        Default: =gallery_donations.Selected.Comments
+                        DelayOutput: =true
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =96 * Z
+                        HintText: ="Add a comment"
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(255, 255, 255, 1)
+                        MaxLength: =DataSourceInfo([@'Financial Submissions'], DataSourceInfo.MaxLength, Comments)
+                        Mode: =TextMode.MultiLine
+                        PaddingBottom: =8 * Z
+                        PaddingLeft: =12 * Z
+                        PaddingRight: =12 * Z
+                        PaddingTop: =8 * Z
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =16 * Z
+                        Tooltip: ="Comments"
+                        Visible: =!IsBlank(gallery_donations.Selected.ID)
+                        Width: =Parent.Width - 64 * Z
+                        X: =0 + 32 * Z
+                        Y: =lblSelCommentsHeadDon.Y + lblSelCommentsHeadDon.Height
+                  - btnPanelSaveCommentDon:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(255, 255, 255, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        Fill: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =30 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =RGBA(255, 255, 255, 1)
+                        HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+                        OnSelect: |-
+                          =If(!IsBlank(gallery_donations.Selected.ID) && txtPanelCommentsDon.Text <> Coalesce(gallery_donations.Selected.Comments, ""), With({r: LookUp('Financial Submissions', ID = gallery_donations.Selected.ID)}, Patch('Financial Submissions', r, {Comments: txtPanelCommentsDon.Text})); Refresh('Financial Submissions'); Notify("Comment saved", NotificationType.Success))
+                        PressedBorderColor: =Self.Fill
+                        PressedColor: =Self.Fill
+                        PressedFill: =Self.Color
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =14 * Z
+                        Text: ="Save comment"
+                        Visible: =!IsBlank(gallery_donations.Selected.ID) && txtPanelCommentsDon.Text <> Coalesce(gallery_donations.Selected.Comments, "")
+                        Width: =170 * Z
+                        X: =0 + Parent.Width - 32 * Z - Self.Width
+                        Y: =lblSelCommentsHeadDon.Y
+                  - icoPanelDeleteDon:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(96, 96, 96, 1)
+                        FocusedBorderThickness: =2 * Z
+                        Height: =40 * Z
+                        HoverColor: =RGBA(168, 0, 0, 1)
+                        Icon: =Icon.Trash
+                        OnSelect: |-
+                          =UpdateContext({locDelId: gallery_donations.Selected.ID})
+                        Tooltip: ="Delete this submission"
+                        Visible: =!IsBlank(gallery_donations.Selected.ID)
+                        Width: =40 * Z
+                        X: =0 + Parent.Width - 32 * Z - Self.Width
+                        Y: =0 + 32 * Z
+                  - rectDelBoxDon:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =RGBA(168, 0, 0, 1)
+                        BorderThickness: =2
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FocusedBorderThickness: =2 * Z
+                        Height: =236 * Z
+                        Visible: =!IsBlank(gallery_donations.Selected.ID) && locDelId = gallery_donations.Selected.ID
+                        Width: =Parent.Width - 32 * Z
+                        X: =0 + 16 * Z
+                        Y: =0 + 16 * Z
+                  - lblDelTitleDon:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =40 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =20 * Z
+                        Text: ="Delete this submission?"
+                        Visible: =!IsBlank(gallery_donations.Selected.ID) && locDelId = gallery_donations.Selected.ID
+                        Width: =Parent.Width - 72 * Z
+                        Wrap: =false
+                        X: =0 + 36 * Z
+                        Y: =0 + 28 * Z
+                  - lblDelBodyDon:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 18, 107, 1)
+                        Color: =RGBA(40, 40, 40, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =104 * Z
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =15 * Z
+                        Text: ="This removes " & lblSelVendorDon.Text & " and its attachments for everyone. It can only be brought back from the SharePoint recycle bin."
+                        VerticalAlign: =VerticalAlign.Top
+                        Visible: =!IsBlank(gallery_donations.Selected.ID) && locDelId = gallery_donations.Selected.ID
+                        Width: =Parent.Width - 72 * Z
+                        X: =0 + 36 * Z
+                        Y: =0 + 68 * Z
+                  - btnDelYesDon:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =ColorFade(Self.Fill, -15%)
+                        BorderThickness: =0
+                        Color: =RGBA(255, 255, 255, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        Fill: =RGBA(168, 0, 0, 1)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =44 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =RGBA(255, 255, 255, 1)
+                        HoverFill: =ColorFade(RGBA(168, 0, 0, 1), -20%)
+                        OnSelect: |-
+                          =If(!IsBlank(gallery_donations.Selected.ID) && locDelId = gallery_donations.Selected.ID, IfError(Remove('Financial Submissions', LookUp('Financial Submissions', ID = gallery_donations.Selected.ID)), Notify("Could not delete: " & FirstError.Message, NotificationType.Error), Notify("Submission deleted", NotificationType.Success)); UpdateContext({locDelId: Blank()}); Refresh('Financial Submissions'))
+                        PressedBorderColor: =Self.Fill
+                        PressedColor: =Self.Fill
+                        PressedFill: =Self.Color
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =16 * Z
+                        Text: ="Delete"
+                        Visible: =!IsBlank(gallery_donations.Selected.ID) && locDelId = gallery_donations.Selected.ID
+                        Width: =140 * Z
+                        X: =0 + 36 * Z
+                        Y: =0 + 184 * Z
+                  - btnDelNoDon:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(205, 210, 215, 1)
+                        BorderThickness: =1
+                        Color: =RGBA(40, 40, 40, 1)
+                        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                        Fill: =RGBA(255, 255, 255, 1)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =44 * Z
+                        HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                        HoverColor: =RGBA(40, 40, 40, 1)
+                        HoverFill: =RGBA(240, 242, 245, 1)
+                        OnSelect: |-
+                          =UpdateContext({locDelId: Blank()})
+                        PressedBorderColor: =Self.Fill
+                        PressedColor: =RGBA(40, 40, 40, 1)
+                        PressedFill: =RGBA(225, 228, 232, 1)
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =16 * Z
+                        Text: ="Cancel"
+                        Visible: =!IsBlank(gallery_donations.Selected.ID) && locDelId = gallery_donations.Selected.ID
+                        Width: =140 * Z
+                        X: =0 + 188 * Z
+                        Y: =0 + 184 * Z

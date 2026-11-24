@@ -1,0 +1,1041 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  LandingPage:
+    Properties:
+      Fill: =RGBA(244, 246, 248, 1)
+      Height: =Max(App.Height, If((App.Width < 640 || (App.Width < 1000 && App.Height > App.Width)), 1356 * Z, If(Self.Width >= 1000, 1120 * Z, 1030 * Z)))
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+    Children:
+      - RectQuickActionBar1_1:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =RGBA(__MS_HEADER_RGB__, 1)
+            Height: =HB
+            Width: =Parent.Width
+      - LblAppName1_1:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 1)
+            Color: =RGBA(__MS_HEADER_TEXT_RGB__, 1)
+            Fill: =RGBA(58, 58, 58, 0)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =HB
+            Size: =If(Phone, 28 * Z, 24 * Z)
+            Text: =__MS_TITLE__
+            Width: =360 * Z
+            Wrap: =false
+            X: =(Parent.Width - If(Parent.Width >= 1000, Min(Parent.Width - 48 * Z, 760 * Z), Parent.Width - 48 * Z)) / 2
+      - lblUser:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Right
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(__MS_HEADER_TEXT_RGB__, 1)
+            Font: =Font.'Open Sans'
+            Height: =48 * Z
+            PaddingBottom: =5 * Z
+            PaddingLeft: =5 * Z
+            PaddingRight: =5 * Z
+            PaddingTop: =5 * Z
+            Size: =If(Phone, 18 * Z, 15 * Z)
+            Text: =CurrentUser.FullName
+            Visible: =Parent.Width >= 640
+            Width: =320 * Z
+            X: =(Parent.Width - If(Parent.Width >= 1000, Min(Parent.Width - 48 * Z, 760 * Z), Parent.Width - 48 * Z)) / 2 + If(Parent.Width >= 1000, Min(Parent.Width - 48 * Z, 760 * Z), Parent.Width - 48 * Z) - 320 * Z
+            Y: =(HB - Self.Height) / 2
+      - lblSecSubmit:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(70, 70, 70, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =If(Phone, 48 * Z, If(Parent.Width >= 1000, 48 * Z, 40 * Z))
+            PaddingBottom: =5 * Z
+            PaddingLeft: =5 * Z
+            PaddingRight: =5 * Z
+            PaddingTop: =5 * Z
+            Size: =If(Phone, 22 * Z, If(Parent.Width >= 1000, 24 * Z, 18 * Z))
+            Text: ="Submit something new"
+            Width: =If(Phone, crdExpense.Width, (2 * crdExpense.Width + If(Parent.Width >= 1000, 20 * Z, 16 * Z)))
+            X: =crdExpense.X
+            Y: =If(Phone, HB + 24 * Z, If(Parent.Width >= 1000, 88 * Z, 96 * Z))
+      - lblSecApprove:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(70, 70, 70, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =If(Phone, 48 * Z, If(Parent.Width >= 1000, 48 * Z, 40 * Z))
+            PaddingBottom: =5 * Z
+            PaddingLeft: =5 * Z
+            PaddingRight: =5 * Z
+            PaddingTop: =5 * Z
+            Size: =If(Phone, 22 * Z, If(Parent.Width >= 1000, 24 * Z, 18 * Z))
+            Text: ="Approve"
+            Visible: =capFinancial.Visible || capIncome.Visible
+            Width: =If(Phone, crdExpense.Width, (2 * crdExpense.Width + If(Parent.Width >= 1000, 20 * Z, 16 * Z)))
+            X: =crdExpense.X
+            Y: =If(Phone, crdExpense.Y + 3 * 256 * Z + 16 * Z, crdExpense.Y + If(Parent.Width >= 1000, 660 * Z, 516 * Z) + 36 * Z)
+      - bgExpense:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledFill: =RGBA(255, 255, 255, 1)
+            DisplayMode: =DisplayMode.Disabled
+            Fill: =RGBA(255, 255, 255, 1)
+            FocusedBorderThickness: =4 * Z
+            Font: =Font.'Open Sans'
+            Height: =crdExpense.Height
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(40, 122, 54, 1), -15%)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =10 * Z
+            RadiusBottomRight: =10 * Z
+            RadiusTopLeft: =10 * Z
+            RadiusTopRight: =10 * Z
+            Size: =22 * Z
+            Text: =""
+            Visible: =crdExpense.Visible
+            Width: =crdExpense.Width
+            X: =crdExpense.X
+            Y: =crdExpense.Y
+      - icoExpense:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(168, 0, 0, 1)
+            Color: =RGBA(40, 122, 54, 1)
+            FocusedBorderThickness: =2 * Z
+            Height: =If(Phone, 88 * Z, If(Parent.Width >= 1000, 92 * Z, 72 * Z))
+            Icon: =Icon.Money
+            OnSelect: =Set(gblDeposit, false); NewForm(FinancialThingForm); Navigate(CreateFinancialThing, ScreenTransition.None)
+            Width: =If(Phone, 88 * Z, If(Parent.Width >= 1000, 92 * Z, 72 * Z))
+            X: =If(Phone, crdExpense.X + 24 * Z, crdExpense.X + (crdExpense.Width - Self.Width) / 2)
+            Y: =If(Phone, crdExpense.Y + 30 * Z, crdExpense.Y + If(Parent.Width >= 1000, 34 * Z, 30 * Z))
+      - ttlExpense:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =If(Phone, Align.Left, Align.Center)
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 44 * Z, If(Parent.Width >= 1000, 40 * Z, 32 * Z))
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =Self.Color
+            HoverFill: =RGBA(0, 0, 0, 0)
+            OnSelect: =Set(gblDeposit, false); NewForm(FinancialThingForm); Navigate(CreateFinancialThing, ScreenTransition.None)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedFill: =RGBA(0, 0, 0, 0)
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Size: =If(Phone, 28 * Z, If(Parent.Width >= 1000, 27 * Z, 21 * Z))
+            Text: ="Expense"
+            Width: =If(Phone, crdExpense.Width - 136 * Z - 110 * Z, crdExpense.Width - 16 * Z)
+            X: =If(Phone, crdExpense.X + 136 * Z, crdExpense.X + 8 * Z)
+            Y: =If(Phone, crdExpense.Y + 30 * Z, crdExpense.Y + If(Parent.Width >= 1000, 136 * Z, 110 * Z))
+      - dscExpense:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =If(Phone, Align.Left, Align.Center)
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(96, 96, 96, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Normal
+            Height: =If(Phone, 56 * Z, If(Parent.Width >= 1000, 56 * Z, 44 * Z))
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =Self.Color
+            HoverFill: =RGBA(0, 0, 0, 0)
+            OnSelect: =Set(gblDeposit, false); NewForm(FinancialThingForm); Navigate(CreateFinancialThing, ScreenTransition.None)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedFill: =RGBA(0, 0, 0, 0)
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Size: =If(Phone, 16 * Z, If(Parent.Width >= 1000, 15 * Z, 13 * Z))
+            Text: ="An invoice, receipt or reimbursement"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =If(Phone, crdExpense.Width - 136 * Z - 24 * Z, crdExpense.Width - 28 * Z)
+            X: =If(Phone, crdExpense.X + 136 * Z, crdExpense.X + 14 * Z)
+            Y: =If(Phone, crdExpense.Y + 76 * Z, crdExpense.Y + If(Parent.Width >= 1000, 180 * Z, 144 * Z))
+      - tagExpense:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(40, 122, 54, 1)
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledColor: =RGBA(40, 122, 54, 1)
+            DisabledFill: =RGBA(228, 242, 230, 1)
+            DisplayMode: =DisplayMode.Disabled
+            Fill: =RGBA(228, 242, 230, 1)
+            FocusedBorderThickness: =4 * Z
+            Font: =Font.'Open Sans'
+            Height: =If(Parent.Width >= 1000, 30 * Z, 28 * Z)
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(40, 122, 54, 1), -15%)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =15 * Z
+            RadiusBottomRight: =15 * Z
+            RadiusTopLeft: =15 * Z
+            RadiusTopRight: =15 * Z
+            Size: =If(Parent.Width >= 1000, 14 * Z, 13 * Z)
+            Text: ="+ New"
+            Width: =If(Parent.Width >= 1000, 80 * Z, 72 * Z)
+            X: =crdExpense.X + crdExpense.Width - If(Parent.Width >= 1000, 96 * Z, 84 * Z)
+            Y: =crdExpense.Y + If(Parent.Width >= 1000, 16 * Z, 12 * Z)
+      - crdExpense:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            BorderThickness: =1
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =2
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 240 * Z, If(Parent.Width >= 1000, 320 * Z, 250 * Z))
+            HoverBorderColor: =RGBA(40, 122, 54, 1)
+            HoverColor: =RGBA(40, 40, 40, 1)
+            HoverFill: =RGBA(56, 96, 178, 0.07)
+            OnSelect: =Set(gblDeposit, false); NewForm(FinancialThingForm); Navigate(CreateFinancialThing, ScreenTransition.None)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(40, 40, 40, 1)
+            PressedFill: =RGBA(56, 96, 178, 0.15)
+            RadiusBottomLeft: =10 * Z
+            RadiusBottomRight: =10 * Z
+            RadiusTopLeft: =10 * Z
+            RadiusTopRight: =10 * Z
+            Size: =14 * Z
+            Text: =""
+            Width: =If(Phone, Parent.Width - 48 * Z, (If(Parent.Width >= 1000, Min(Parent.Width - 48 * Z, 760 * Z), Parent.Width - 48 * Z) - If(Parent.Width >= 1000, 20 * Z, 16 * Z)) / 2)
+            X: =(Parent.Width - If(Parent.Width >= 1000, Min(Parent.Width - 48 * Z, 760 * Z), Parent.Width - 48 * Z)) / 2
+            Y: =If(Phone, HB + 84 * Z, 148 * Z)
+      - lnkExpense:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            BorderThickness: =1
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(244, 246, 248, 1)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Normal
+            Height: =If(Phone, 46 * Z, If(Parent.Width >= 1000, 44 * Z, 38 * Z))
+            HoverBorderColor: =RGBA(56, 96, 178, 1)
+            HoverColor: =RGBA(40, 40, 40, 1)
+            HoverFill: =RGBA(222, 233, 247, 1)
+            OnSelect: =Navigate(YourFinancialSubmissions)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(40, 40, 40, 1)
+            PressedFill: =RGBA(205, 221, 243, 1)
+            RadiusBottomLeft: =8 * Z
+            RadiusBottomRight: =8 * Z
+            RadiusTopLeft: =8 * Z
+            RadiusTopRight: =8 * Z
+            Size: =If(Phone, 16 * Z, If(Parent.Width >= 1000, 15 * Z, 14 * Z))
+            Text: ="Your items"
+            Width: =If(Phone, Min(320 * Z, crdExpense.Width - 136 * Z - 24 * Z), crdExpense.Width - 2 * If(Parent.Width >= 1000, 24 * Z, 16 * Z))
+            X: =If(Phone, crdExpense.X + 136 * Z, crdExpense.X + If(Parent.Width >= 1000, 24 * Z, 16 * Z))
+            Y: =If(Phone, crdExpense.Y + 168 * Z, crdExpense.Y + crdExpense.Height - If(Parent.Width >= 1000, HB, 52 * Z))
+      - bdgExpense:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(214, 40, 40, 1)
+            FocusedBorderThickness: =4 * Z
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 28 * Z, 24 * Z)
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(214, 40, 40, 1)
+            OnSelect: =Navigate(YourFinancialSubmissions)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(214, 40, 40, 1)
+            RadiusBottomLeft: =12 * Z
+            RadiusBottomRight: =12 * Z
+            RadiusTopLeft: =12 * Z
+            RadiusTopRight: =12 * Z
+            Size: =If(Phone, 14 * Z, 12 * Z)
+            Text: =CountRows(Filter(Filter('Financial Submissions', 'Created By'.Email = CurrentUser.Email && Processed = false), Approved <> true && 'Type of thing'.Value <> "Income" && 'Type of thing'.Value <> "Deposit"))
+            Visible: =Value(Self.Text) > 0
+            Width: =If(Phone, 36 * Z, 30 * Z)
+            X: =lnkExpense.X + lnkExpense.Width - 18 * Z
+            Y: =lnkExpense.Y - 11 * Z
+      - bgIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledFill: =RGBA(255, 255, 255, 1)
+            DisplayMode: =DisplayMode.Disabled
+            Fill: =RGBA(255, 255, 255, 1)
+            FocusedBorderThickness: =4 * Z
+            Font: =Font.'Open Sans'
+            Height: =crdIncome.Height
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(40, 122, 54, 1), -15%)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =10 * Z
+            RadiusBottomRight: =10 * Z
+            RadiusTopLeft: =10 * Z
+            RadiusTopRight: =10 * Z
+            Size: =22 * Z
+            Text: =""
+            Visible: =crdIncome.Visible
+            Width: =crdIncome.Width
+            X: =crdIncome.X
+            Y: =crdIncome.Y
+      - icoIncome:
+          Control: Image@2.2.3
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            Height: =If(Phone, 88 * Z, If(Parent.Width >= 1000, 92 * Z, 72 * Z))
+            Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 72' fill='none' stroke='#0079BB' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='17' width='62' height='38' rx='4'/><path d='M14 29h24M14 39h15M46 29h12M40 46c3-5 5 4 8 0s5 3 9-1'/></svg>")
+            Width: =If(Phone, 88 * Z, If(Parent.Width >= 1000, 92 * Z, 72 * Z))
+            X: =If(Phone, crdIncome.X + 24 * Z, crdIncome.X + (crdIncome.Width - Self.Width) / 2)
+            Y: =If(Phone, crdIncome.Y + 30 * Z, crdIncome.Y + If(Parent.Width >= 1000, 34 * Z, 30 * Z))
+      - ttlIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =If(Phone, Align.Left, Align.Center)
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 44 * Z, If(Parent.Width >= 1000, 40 * Z, 32 * Z))
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =Self.Color
+            HoverFill: =RGBA(0, 0, 0, 0)
+            OnSelect: =NewForm(IncomeThingForm);Navigate(CreateIncomeThing, ScreenTransition.None)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedFill: =RGBA(0, 0, 0, 0)
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Size: =If(Phone, 28 * Z, If(Parent.Width >= 1000, 27 * Z, 21 * Z))
+            Text: ="Income"
+            Width: =If(Phone, crdIncome.Width - 136 * Z - 110 * Z, crdIncome.Width - 16 * Z)
+            X: =If(Phone, crdIncome.X + 136 * Z, crdIncome.X + 8 * Z)
+            Y: =If(Phone, crdIncome.Y + 30 * Z, crdIncome.Y + If(Parent.Width >= 1000, 136 * Z, 110 * Z))
+      - dscIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =If(Phone, Align.Left, Align.Center)
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(96, 96, 96, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Normal
+            Height: =If(Phone, 56 * Z, If(Parent.Width >= 1000, 56 * Z, 44 * Z))
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =Self.Color
+            HoverFill: =RGBA(0, 0, 0, 0)
+            OnSelect: =NewForm(IncomeThingForm);Navigate(CreateIncomeThing, ScreenTransition.None)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedFill: =RGBA(0, 0, 0, 0)
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Size: =If(Phone, 16 * Z, If(Parent.Width >= 1000, 15 * Z, 13 * Z))
+            Text: ="A check, EFT or other payment received"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =If(Phone, crdIncome.Width - 136 * Z - 24 * Z, crdIncome.Width - 28 * Z)
+            X: =If(Phone, crdIncome.X + 136 * Z, crdIncome.X + 14 * Z)
+            Y: =If(Phone, crdIncome.Y + 76 * Z, crdIncome.Y + If(Parent.Width >= 1000, 180 * Z, 144 * Z))
+      - tagIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(0, 121, 187, 1)
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledColor: =RGBA(0, 121, 187, 1)
+            DisabledFill: =RGBA(225, 240, 250, 1)
+            DisplayMode: =DisplayMode.Disabled
+            Fill: =RGBA(225, 240, 250, 1)
+            FocusedBorderThickness: =4 * Z
+            Font: =Font.'Open Sans'
+            Height: =If(Parent.Width >= 1000, 30 * Z, 28 * Z)
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(40, 122, 54, 1), -15%)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =15 * Z
+            RadiusBottomRight: =15 * Z
+            RadiusTopLeft: =15 * Z
+            RadiusTopRight: =15 * Z
+            Size: =If(Parent.Width >= 1000, 14 * Z, 13 * Z)
+            Text: ="+ New"
+            Width: =If(Parent.Width >= 1000, 80 * Z, 72 * Z)
+            X: =crdIncome.X + crdIncome.Width - If(Parent.Width >= 1000, 96 * Z, 84 * Z)
+            Y: =crdIncome.Y + If(Parent.Width >= 1000, 16 * Z, 12 * Z)
+      - crdIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            BorderThickness: =1
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =2
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 240 * Z, If(Parent.Width >= 1000, 320 * Z, 250 * Z))
+            HoverBorderColor: =RGBA(0, 121, 187, 1)
+            HoverColor: =RGBA(40, 40, 40, 1)
+            HoverFill: =RGBA(56, 96, 178, 0.07)
+            OnSelect: =NewForm(IncomeThingForm);Navigate(CreateIncomeThing, ScreenTransition.None)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(40, 40, 40, 1)
+            PressedFill: =RGBA(56, 96, 178, 0.15)
+            RadiusBottomLeft: =10 * Z
+            RadiusBottomRight: =10 * Z
+            RadiusTopLeft: =10 * Z
+            RadiusTopRight: =10 * Z
+            Size: =14 * Z
+            Text: =""
+            Width: =crdExpense.Width
+            X: =If(Phone, crdExpense.X, crdExpense.X)
+            Y: =If(Phone, crdExpense.Y + 2 * 256 * Z, crdExpense.Y + If(Parent.Width >= 1000, 340 * Z, 266 * Z))
+      - lnkIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            BorderThickness: =1
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(244, 246, 248, 1)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Normal
+            Height: =If(Phone, 46 * Z, If(Parent.Width >= 1000, 44 * Z, 38 * Z))
+            HoverBorderColor: =RGBA(56, 96, 178, 1)
+            HoverColor: =RGBA(40, 40, 40, 1)
+            HoverFill: =RGBA(222, 233, 247, 1)
+            OnSelect: =Navigate(YourFinancialSubmissions)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(40, 40, 40, 1)
+            PressedFill: =RGBA(205, 221, 243, 1)
+            RadiusBottomLeft: =8 * Z
+            RadiusBottomRight: =8 * Z
+            RadiusTopLeft: =8 * Z
+            RadiusTopRight: =8 * Z
+            Size: =If(Phone, 16 * Z, If(Parent.Width >= 1000, 15 * Z, 14 * Z))
+            Text: ="Your items"
+            Width: =If(Phone, Min(320 * Z, crdIncome.Width - 136 * Z - 24 * Z), crdIncome.Width - 2 * If(Parent.Width >= 1000, 24 * Z, 16 * Z))
+            X: =If(Phone, crdIncome.X + 136 * Z, crdIncome.X + If(Parent.Width >= 1000, 24 * Z, 16 * Z))
+            Y: =If(Phone, crdIncome.Y + 168 * Z, crdIncome.Y + crdIncome.Height - If(Parent.Width >= 1000, HB, 52 * Z))
+      - bdgIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(214, 40, 40, 1)
+            FocusedBorderThickness: =4 * Z
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 28 * Z, 24 * Z)
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(214, 40, 40, 1)
+            OnSelect: =Navigate(YourFinancialSubmissions)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(214, 40, 40, 1)
+            RadiusBottomLeft: =12 * Z
+            RadiusBottomRight: =12 * Z
+            RadiusTopLeft: =12 * Z
+            RadiusTopRight: =12 * Z
+            Size: =If(Phone, 14 * Z, 12 * Z)
+            Text: =CountRows(Filter(Filter('Financial Submissions', 'Created By'.Email = CurrentUser.Email && Processed = false), Approved <> true && 'Type of thing'.Value = "Income"))
+            Visible: =Value(Self.Text) > 0
+            Width: =If(Phone, 36 * Z, 30 * Z)
+            X: =lnkIncome.X + lnkIncome.Width - 18 * Z
+            Y: =lnkIncome.Y - 11 * Z
+      - bgAFinancial:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledFill: =RGBA(255, 255, 255, 1)
+            DisplayMode: =DisplayMode.Disabled
+            Fill: =RGBA(255, 255, 255, 1)
+            FocusedBorderThickness: =4 * Z
+            Font: =Font.'Open Sans'
+            Height: =capFinancial.Height
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(40, 122, 54, 1), -15%)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =10 * Z
+            RadiusBottomRight: =10 * Z
+            RadiusTopLeft: =10 * Z
+            RadiusTopRight: =10 * Z
+            Size: =22 * Z
+            Text: =""
+            Visible: =capFinancial.Visible
+            Width: =capFinancial.Width
+            X: =capFinancial.X
+            Y: =capFinancial.Y
+      - icoAFinancial:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(168, 0, 0, 1)
+            Color: =RGBA(40, 122, 54, 1)
+            FocusedBorderThickness: =2 * Z
+            Height: =If(Phone, 64 * Z, If(Parent.Width >= 1000, 54 * Z, 44 * Z))
+            Icon: =Icon.CheckBadge
+            OnSelect: =Navigate(FinancialApprovals)
+            Visible: =capFinancial.Visible
+            Width: =If(Phone, 64 * Z, If(Parent.Width >= 1000, 54 * Z, 44 * Z))
+            X: =If(Phone, capFinancial.X + 24 * Z, capFinancial.X + If(Parent.Width >= 1000, 26 * Z, 18 * Z))
+            Y: =capFinancial.Y + (capFinancial.Height - Self.Height) / 2
+      - ttlAFinancial:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 48 * Z, 40 * Z)
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =Self.Color
+            HoverFill: =RGBA(0, 0, 0, 0)
+            OnSelect: =Navigate(FinancialApprovals)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedFill: =RGBA(0, 0, 0, 0)
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Size: =If(Phone, 28 * Z, If(Parent.Width >= 1000, 24 * Z, 19 * Z))
+            Text: ="Financial"
+            Visible: =capFinancial.Visible
+            Width: =If(Phone, capFinancial.Width - 112 * Z - 60 * Z, capFinancial.Width - If(Parent.Width >= 1000, 102 * Z, 80 * Z) - 40 * Z)
+            X: =If(Phone, capFinancial.X + 112 * Z, capFinancial.X + If(Parent.Width >= 1000, 102 * Z, 80 * Z))
+            Y: =capFinancial.Y + (capFinancial.Height - Self.Height) / 2
+      - capFinancial:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            BorderThickness: =1
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =2
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 124 * Z, If(Parent.Width >= 1000, 110 * Z, 84 * Z))
+            HoverBorderColor: =RGBA(40, 122, 54, 1)
+            HoverColor: =RGBA(40, 40, 40, 1)
+            HoverFill: =RGBA(56, 96, 178, 0.07)
+            OnSelect: =Navigate(FinancialApprovals)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(40, 40, 40, 1)
+            PressedFill: =RGBA(56, 96, 178, 0.15)
+            RadiusBottomLeft: =10 * Z
+            RadiusBottomRight: =10 * Z
+            RadiusTopLeft: =10 * Z
+            RadiusTopRight: =10 * Z
+            Size: =14 * Z
+            Text: =""
+            Visible: =__MS_IS_FINANCIAL_APPROVER__
+            Width: =If(Phone, crdExpense.Width, If(Parent.Width >= 1000, crdExpense.Width, (2 * crdExpense.Width + If(Parent.Width >= 1000, 20 * Z, 16 * Z))))
+            X: =If(Parent.Width >= 1000, crdExpense.X + Mod(0, 2) * (crdExpense.Width + If(Parent.Width >= 1000, 20 * Z, 16 * Z)), crdExpense.X)
+            Y: =If(Phone, lblSecApprove.Y + 60 * Z + 0 * 140 * Z, lblSecApprove.Y + If(Parent.Width >= 1000, 60 * Z, 52 * Z) + If(Parent.Width >= 1000, RoundDown(0 / 2, 0) * 130 * Z, 0 * 96 * Z))
+      - cntAFinancial:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(214, 40, 40, 1)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 34 * Z, 26 * Z)
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(214, 40, 40, 1)
+            OnSelect: =Navigate(FinancialApprovals)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(214, 40, 40, 1)
+            RadiusBottomLeft: =13 * Z
+            RadiusBottomRight: =13 * Z
+            RadiusTopLeft: =13 * Z
+            RadiusTopRight: =13 * Z
+            Size: =If(Phone, 17 * Z, 13 * Z)
+            Text: =If(capFinancial.Visible, CountRows(Filter(Filter('Financial Submissions', Processed = false), Approved <> true && 'Type of thing'.Value <> "Income")), 0)
+            Visible: =capFinancial.Visible && Value(Self.Text) > 0
+            Width: =If(Phone, 44 * Z, 34 * Z)
+            X: =capFinancial.X + capFinancial.Width - 22 * Z
+            Y: =capFinancial.Y - 11 * Z
+      - bgAIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledFill: =RGBA(255, 255, 255, 1)
+            DisplayMode: =DisplayMode.Disabled
+            Fill: =RGBA(255, 255, 255, 1)
+            FocusedBorderThickness: =4 * Z
+            Font: =Font.'Open Sans'
+            Height: =capIncome.Height
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(40, 122, 54, 1), -15%)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =10 * Z
+            RadiusBottomRight: =10 * Z
+            RadiusTopLeft: =10 * Z
+            RadiusTopRight: =10 * Z
+            Size: =22 * Z
+            Text: =""
+            Visible: =capIncome.Visible
+            Width: =capIncome.Width
+            X: =capIncome.X
+            Y: =capIncome.Y
+      - icoAIncome:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(168, 0, 0, 1)
+            Color: =RGBA(0, 121, 187, 1)
+            FocusedBorderThickness: =2 * Z
+            Height: =If(Phone, 64 * Z, If(Parent.Width >= 1000, 54 * Z, 44 * Z))
+            Icon: =Icon.CheckBadge
+            OnSelect: =Navigate(IncomeApprovals)
+            Visible: =capIncome.Visible
+            Width: =If(Phone, 64 * Z, If(Parent.Width >= 1000, 54 * Z, 44 * Z))
+            X: =If(Phone, capIncome.X + 24 * Z, capIncome.X + If(Parent.Width >= 1000, 26 * Z, 18 * Z))
+            Y: =capIncome.Y + (capIncome.Height - Self.Height) / 2
+      - ttlAIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =Align.Left
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 48 * Z, 40 * Z)
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =Self.Color
+            HoverFill: =RGBA(0, 0, 0, 0)
+            OnSelect: =Navigate(IncomeApprovals)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedFill: =RGBA(0, 0, 0, 0)
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Size: =If(Phone, 28 * Z, If(Parent.Width >= 1000, 24 * Z, 19 * Z))
+            Text: ="Income"
+            Visible: =capIncome.Visible
+            Width: =If(Phone, capIncome.Width - 112 * Z - 60 * Z, capIncome.Width - If(Parent.Width >= 1000, 102 * Z, 80 * Z) - 40 * Z)
+            X: =If(Phone, capIncome.X + 112 * Z, capIncome.X + If(Parent.Width >= 1000, 102 * Z, 80 * Z))
+            Y: =capIncome.Y + (capIncome.Height - Self.Height) / 2
+      - capIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            BorderThickness: =1
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =2
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 124 * Z, If(Parent.Width >= 1000, 110 * Z, 84 * Z))
+            HoverBorderColor: =RGBA(0, 121, 187, 1)
+            HoverColor: =RGBA(40, 40, 40, 1)
+            HoverFill: =RGBA(56, 96, 178, 0.07)
+            OnSelect: =Navigate(IncomeApprovals)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(40, 40, 40, 1)
+            PressedFill: =RGBA(56, 96, 178, 0.15)
+            RadiusBottomLeft: =10 * Z
+            RadiusBottomRight: =10 * Z
+            RadiusTopLeft: =10 * Z
+            RadiusTopRight: =10 * Z
+            Size: =14 * Z
+            Text: =""
+            Visible: =__MS_IS_INCOME_APPROVER__
+            Width: =If(Phone, crdExpense.Width, If(Parent.Width >= 1000, crdExpense.Width, (2 * crdExpense.Width + If(Parent.Width >= 1000, 20 * Z, 16 * Z))))
+            X: =If(Parent.Width >= 1000, crdExpense.X + Mod(If(capFinancial.Visible, 1, 0), 2) * (crdExpense.Width + If(Parent.Width >= 1000, 20 * Z, 16 * Z)), crdExpense.X)
+            Y: =If(Phone, lblSecApprove.Y + 60 * Z + If(capFinancial.Visible, 1, 0) * 140 * Z, lblSecApprove.Y + If(Parent.Width >= 1000, 60 * Z, 52 * Z) + If(Parent.Width >= 1000, RoundDown(If(capFinancial.Visible, 1, 0) / 2, 0) * 130 * Z, If(capFinancial.Visible, 1, 0) * 96 * Z))
+      - cntAIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(214, 40, 40, 1)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 34 * Z, 26 * Z)
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(214, 40, 40, 1)
+            OnSelect: =Navigate(IncomeApprovals)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(214, 40, 40, 1)
+            RadiusBottomLeft: =13 * Z
+            RadiusBottomRight: =13 * Z
+            RadiusTopLeft: =13 * Z
+            RadiusTopRight: =13 * Z
+            Size: =If(Phone, 17 * Z, 13 * Z)
+            Text: =If(capIncome.Visible, CountRows(Filter(Filter('Financial Submissions', Processed = false), DonationRecorded <> true && 'Type of thing'.Value = "Income")), 0)
+            Visible: =capIncome.Visible && Value(Self.Text) > 0
+            Width: =If(Phone, 44 * Z, 34 * Z)
+            X: =capIncome.X + capIncome.Width - 22 * Z
+            Y: =capIncome.Y - 11 * Z
+      - bgDeposit:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledFill: =RGBA(255, 255, 255, 1)
+            DisplayMode: =DisplayMode.Disabled
+            Fill: =RGBA(255, 255, 255, 1)
+            FocusedBorderThickness: =4 * Z
+            Font: =Font.'Open Sans'
+            Height: =crdDeposit.Height
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(40, 122, 54, 1), -15%)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =10 * Z
+            RadiusBottomRight: =10 * Z
+            RadiusTopLeft: =10 * Z
+            RadiusTopRight: =10 * Z
+            Size: =22 * Z
+            Text: =""
+            Visible: =crdDeposit.Visible
+            Width: =crdDeposit.Width
+            X: =crdDeposit.X
+            Y: =crdDeposit.Y
+      - icoDeposit:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(168, 0, 0, 1)
+            Color: =RGBA(0, 128, 128, 1)
+            FocusedBorderThickness: =2 * Z
+            Height: =If(Phone, 88 * Z, If(Parent.Width >= 1000, 92 * Z, 72 * Z))
+            Icon: =Icon.Import
+            OnSelect: =Set(gblDeposit, true); NewForm(FinancialThingForm); Navigate(CreateFinancialThing, ScreenTransition.None)
+            Width: =If(Phone, 88 * Z, If(Parent.Width >= 1000, 92 * Z, 72 * Z))
+            X: =If(Phone, crdDeposit.X + 24 * Z, crdDeposit.X + (crdDeposit.Width - Self.Width) / 2)
+            Y: =If(Phone, crdDeposit.Y + 30 * Z, crdDeposit.Y + If(Parent.Width >= 1000, 34 * Z, 30 * Z))
+      - ttlDeposit:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =If(Phone, Align.Left, Align.Center)
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 44 * Z, If(Parent.Width >= 1000, 40 * Z, 32 * Z))
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =Self.Color
+            HoverFill: =RGBA(0, 0, 0, 0)
+            OnSelect: =Set(gblDeposit, true); NewForm(FinancialThingForm); Navigate(CreateFinancialThing, ScreenTransition.None)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedFill: =RGBA(0, 0, 0, 0)
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Size: =If(Phone, 28 * Z, If(Parent.Width >= 1000, 27 * Z, 21 * Z))
+            Text: ="Bank deposit"
+            Width: =If(Phone, crdDeposit.Width - 136 * Z - 110 * Z, crdDeposit.Width - 16 * Z)
+            X: =If(Phone, crdDeposit.X + 136 * Z, crdDeposit.X + 8 * Z)
+            Y: =If(Phone, crdDeposit.Y + 30 * Z, crdDeposit.Y + If(Parent.Width >= 1000, 136 * Z, 110 * Z))
+      - dscDeposit:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Align: =If(Phone, Align.Left, Align.Center)
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(96, 96, 96, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Normal
+            Height: =If(Phone, 56 * Z, If(Parent.Width >= 1000, 56 * Z, 44 * Z))
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =Self.Color
+            HoverFill: =RGBA(0, 0, 0, 0)
+            OnSelect: =Set(gblDeposit, true); NewForm(FinancialThingForm); Navigate(CreateFinancialThing, ScreenTransition.None)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedFill: =RGBA(0, 0, 0, 0)
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Size: =If(Phone, 16 * Z, If(Parent.Width >= 1000, 15 * Z, 13 * Z))
+            Text: ="A deposit taken to the bank"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =If(Phone, crdDeposit.Width - 136 * Z - 24 * Z, crdDeposit.Width - 28 * Z)
+            X: =If(Phone, crdDeposit.X + 136 * Z, crdDeposit.X + 14 * Z)
+            Y: =If(Phone, crdDeposit.Y + 76 * Z, crdDeposit.Y + If(Parent.Width >= 1000, 180 * Z, 144 * Z))
+      - tagDeposit:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(0, 128, 128, 1)
+            DisabledBorderColor: =RGBA(0, 0, 0, 0)
+            DisabledColor: =RGBA(0, 128, 128, 1)
+            DisabledFill: =RGBA(222, 242, 242, 1)
+            DisplayMode: =DisplayMode.Disabled
+            Fill: =RGBA(222, 242, 242, 1)
+            FocusedBorderThickness: =4 * Z
+            Font: =Font.'Open Sans'
+            Height: =If(Parent.Width >= 1000, 30 * Z, 28 * Z)
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(40, 122, 54, 1), -15%)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =15 * Z
+            RadiusBottomRight: =15 * Z
+            RadiusTopLeft: =15 * Z
+            RadiusTopRight: =15 * Z
+            Size: =If(Parent.Width >= 1000, 14 * Z, 13 * Z)
+            Text: ="+ New"
+            Width: =If(Parent.Width >= 1000, 80 * Z, 72 * Z)
+            X: =crdDeposit.X + crdDeposit.Width - If(Parent.Width >= 1000, 96 * Z, 84 * Z)
+            Y: =crdDeposit.Y + If(Parent.Width >= 1000, 16 * Z, 12 * Z)
+      - crdDeposit:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            BorderThickness: =1
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =2
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 240 * Z, If(Parent.Width >= 1000, 320 * Z, 250 * Z))
+            HoverBorderColor: =RGBA(0, 128, 128, 1)
+            HoverColor: =RGBA(40, 40, 40, 1)
+            HoverFill: =RGBA(56, 96, 178, 0.07)
+            OnSelect: =Set(gblDeposit, true); NewForm(FinancialThingForm); Navigate(CreateFinancialThing, ScreenTransition.None)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(40, 40, 40, 1)
+            PressedFill: =RGBA(56, 96, 178, 0.15)
+            RadiusBottomLeft: =10 * Z
+            RadiusBottomRight: =10 * Z
+            RadiusTopLeft: =10 * Z
+            RadiusTopRight: =10 * Z
+            Size: =14 * Z
+            Text: =""
+            Width: =crdExpense.Width
+            X: =If(Phone, crdExpense.X, crdExpense.X + (crdExpense.Width + If(Parent.Width >= 1000, 20 * Z, 16 * Z)))
+            Y: =If(Phone, crdExpense.Y + 1 * 256 * Z, crdExpense.Y)
+      - lnkDeposit:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            BorderThickness: =1
+            Color: =RGBA(40, 40, 40, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(244, 246, 248, 1)
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Normal
+            Height: =If(Phone, 46 * Z, If(Parent.Width >= 1000, 44 * Z, 38 * Z))
+            HoverBorderColor: =RGBA(56, 96, 178, 1)
+            HoverColor: =RGBA(40, 40, 40, 1)
+            HoverFill: =RGBA(222, 233, 247, 1)
+            OnSelect: =Navigate(YourFinancialSubmissions)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(40, 40, 40, 1)
+            PressedFill: =RGBA(205, 221, 243, 1)
+            RadiusBottomLeft: =8 * Z
+            RadiusBottomRight: =8 * Z
+            RadiusTopLeft: =8 * Z
+            RadiusTopRight: =8 * Z
+            Size: =If(Phone, 16 * Z, If(Parent.Width >= 1000, 15 * Z, 14 * Z))
+            Text: ="Your items"
+            Width: =If(Phone, Min(320 * Z, crdDeposit.Width - 136 * Z - 24 * Z), crdDeposit.Width - 2 * If(Parent.Width >= 1000, 24 * Z, 16 * Z))
+            X: =If(Phone, crdDeposit.X + 136 * Z, crdDeposit.X + If(Parent.Width >= 1000, 24 * Z, 16 * Z))
+            Y: =If(Phone, crdDeposit.Y + 168 * Z, crdDeposit.Y + crdDeposit.Height - If(Parent.Width >= 1000, HB, 52 * Z))
+      - bdgDeposit:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(214, 40, 40, 1)
+            FocusedBorderThickness: =4 * Z
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 28 * Z, 24 * Z)
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(214, 40, 40, 1)
+            OnSelect: =Navigate(YourFinancialSubmissions)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =Self.Fill
+            PressedColor: =RGBA(255, 255, 255, 1)
+            PressedFill: =RGBA(214, 40, 40, 1)
+            RadiusBottomLeft: =12 * Z
+            RadiusBottomRight: =12 * Z
+            RadiusTopLeft: =12 * Z
+            RadiusTopRight: =12 * Z
+            Size: =If(Phone, 14 * Z, 12 * Z)
+            Text: =CountRows(Filter(Filter('Financial Submissions', 'Created By'.Email = CurrentUser.Email && Processed = false), Approved <> true && 'Type of thing'.Value = "Deposit"))
+            Visible: =Value(Self.Text) > 0
+            Width: =If(Phone, 36 * Z, 30 * Z)
+            X: =lnkDeposit.X + lnkDeposit.Width - 18 * Z
+            Y: =lnkDeposit.Y - 11 * Z

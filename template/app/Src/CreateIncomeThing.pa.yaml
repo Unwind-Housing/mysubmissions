@@ -1,0 +1,1102 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  CreateIncomeThing:
+    Properties:
+      Fill: =RGBA(244, 246, 248, 1)
+      Height: =Max(App.Height, btnSubmitIncome.Y + btnSubmitIncome.Height + 24 * Z)
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+    Children:
+      - rect_header_1:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =RGBA(__MS_HEADER_RGB__, 1)
+            Height: =HB
+            Width: =Parent.Width
+      - lbl_pagename_1:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 0, 0, 1)
+            Color: =RGBA(__MS_HEADER_TEXT_RGB__, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =HB
+            Size: =If(Phone, 28 * Z, 24 * Z)
+            Text: ="Income submission"
+            Width: =640 * Z - 16 * Z - 68 * Z
+            Wrap: =false
+            X: =(Parent.Width - 640 * Z) / 2 + 16 * Z
+      - IconCancel3:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            AccessibleLabel: =Self.Tooltip
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(__MS_HEADER_TEXT_RGB__, 1)
+            Height: =If(Phone, 76 * Z, 56 * Z)
+            Icon: =Icon.Cancel
+            OnSelect: =Navigate(LandingPage)
+            PaddingBottom: =If(Phone, 16 * Z, 10 * Z)
+            PaddingLeft: =If(Phone, 16 * Z, 10 * Z)
+            PaddingRight: =If(Phone, 16 * Z, 10 * Z)
+            PaddingTop: =If(Phone, 16 * Z, 10 * Z)
+            PressedFill: =RGBA(255, 255, 255, 0.3)
+            TabIndex: =0
+            Tooltip: ="Cancel item"
+            Width: =If(Phone, 76 * Z, 56 * Z)
+            X: =(Parent.Width + 640 * Z) / 2 - 10 * Z - Self.Width
+            Y: =(HB - Self.Height) / 2
+      - rect_footer_1:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            BorderStyle: =BorderStyle.None
+            Fill: =Color.LightGray
+            FocusedBorderThickness: =2 * Z
+            Height: =112 * Z
+            Visible: =false
+            Width: =Parent.Width
+            Y: =1024 * Z
+      - IncomeThingForm:
+          Control: Form@2.4.4
+          Variant: Classic
+          Layout: Vertical
+          Properties:
+            BorderColor: =RGBA(205, 210, 215, 1)
+            BorderThickness: =1
+            DataSource: ='Financial Submissions'
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =Min(If(Phone, 127 * Z, 105 * Z) + 13 + If(IsBlank(ErrorMessage55.Text), 0, 28 * Z) + If(Phone, 127 * Z, 105 * Z) + 13 + If(IsBlank(ErrorMessage57.Text), 0, 28 * Z) + If(Phone, 127 * Z, 105 * Z) + 13 + If(IsBlank(ErrorMessage3.Text), 0, 28 * Z) + If(Phone, 127 * Z, 105 * Z) + 13 + If(IsBlank(ErrorMessage2.Text), 0, 28 * Z) + If(Phone, 127 * Z, 105 * Z) + 13 + If(IsBlank(ErrorMessage60.Text), 0, 28 * Z) + If(Phone, 127 * Z, 105 * Z) + 13 + If(IsBlank(ErrorMessage30.Text), 0, 28 * Z) + If(Phone, 251 * Z, 203 * Z) + 13 + If(IsBlank(ErrorMessage63.Text), 0, 28 * Z), Max(240 * Z, App.Height - HB - If(Phone, 128 * Z, 112 * Z)))
+            OnSuccess: |-
+              =If(IsBlank(IncomeThingForm.LastSubmit.Processed), Patch('Financial Submissions', IncomeThingForm.LastSubmit, {Processed: false})); Navigate(IncomeSuccessScreen)
+            Width: =640 * Z
+            X: =(Parent.Width - 640 * Z) / 2
+            Y: =HB
+          Children:
+            - Type of thing_DataCard7:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicComboBoxEdit
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  DataField: ="Type_x0020_of_x0020_thing"
+                  Default: =ThisItem.'Type of thing'
+                  DisplayName: =DataSourceInfo([@'Financial Submissions'],DataSourceInfo.DisplayName,'Type of thing')
+                  Height: =50 * Z
+                  Required: =true
+                  Update: |-
+                    ={Value: "Income"}
+                  Visible: =false
+                  Width: =640 * Z
+                  X: =0
+                  Y: =0
+                Children:
+                  - DataCardKey56:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(60, 60, 60, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =If(Phone, 38 * Z, 30 * Z)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =If(Phone, 20 * Z, 15 * Z)
+                        Text: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        Wrap: =false
+                        X: =30 * Z
+                        Y: =12 * Z
+                  - DataCardValue46:
+                      Control: Classic/ComboBox@2.4.0
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), RGBA(190, 196, 202, 1), Color.Red)
+                        BorderThickness: =1
+                        ChevronBackground: =RGBA(0, 0, 0, 0)
+                        ChevronFill: =RGBA(96, 96, 96, 1)
+                        ChevronHoverBackground: =RGBA(232, 240, 250, 1)
+                        ChevronHoverFill: =RGBA(56, 96, 178, 1)
+                        DefaultSelectedItems: =["Income"]
+                        DisplayFields: =["Value"]
+                        DisplayMode: =Parent.DisplayMode.View
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =If(Phone, 66 * Z, 52 * Z)
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(186, 202, 226, 1)
+                        InputTextPlaceholder: ="Choose"
+                        Items: =Choices([@'Financial Submissions'].'Type of thing')
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5 * Z, 0)
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        PressedColor: =RGBA(255, 255, 255, 1)
+                        PressedFill: =RGBA(0, 18, 107, 1)
+                        SearchFields: =["Value"]
+                        SelectMultiple: =false
+                        SelectionColor: =RGBA(255, 255, 255, 1)
+                        SelectionFill: =RGBA(56, 96, 178, 1)
+                        SelectionTagColor: =RGBA(30, 30, 30, 1)
+                        SelectionTagFill: =RGBA(0, 0, 0, 0)
+                        Size: =If(Phone, 20 * Z, 16 * Z)
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardKey56.Y + DataCardKey56.Height + 5 * Z
+                  - ErrorMessage56:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10 * Z
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24 * Z
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardValue46.Y + DataCardValue46.Height
+                  - StarVisible56:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =DataCardKey56.Height
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =21 * Z
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30 * Z
+                        Wrap: =false
+                        Y: =DataCardKey56.Y
+            - Vendor_DataCard7:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicTextualEdit
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  DataField: ="Title"
+                  Default: =ThisItem.Vendor
+                  DisplayName: =DataSourceInfo([@'Financial Submissions'],DataSourceInfo.DisplayName,Vendor)
+                  Height: =50 * Z
+                  MaxLength: =DataSourceInfo([@'Financial Submissions'], DataSourceInfo.MaxLength, Vendor)
+                  Required: =true
+                  Update: =DataCardValue45.Text
+                  Width: =640 * Z
+                  X: =0
+                  Y: =1
+                Children:
+                  - DataCardKey55:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(60, 60, 60, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =If(Phone, 38 * Z, 30 * Z)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =If(Phone, 20 * Z, 15 * Z)
+                        Text: ="Donor Name"
+                        Width: =Parent.Width - 60 * Z
+                        Wrap: =false
+                        X: =30 * Z
+                        Y: =12 * Z
+                  - DataCardValue45:
+                      Control: Classic/TextInput@2.3.2
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), RGBA(190, 196, 202, 1), Color.Red)
+                        BorderThickness: =1
+                        Color: =RGBA(30, 30, 30, 1)
+                        Default: =Parent.Default
+                        DelayOutput: =true
+                        DisplayMode: =Parent.DisplayMode
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =If(Phone, 66 * Z, 52 * Z)
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(255, 255, 255, 1)
+                        MaxLength: =Parent.MaxLength
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =12 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =If(Phone, 20 * Z, 16 * Z)
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardKey55.Y + DataCardKey55.Height + 5 * Z
+                  - ErrorMessage55:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10 * Z
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24 * Z
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardValue45.Y + DataCardValue45.Height
+                  - StarVisible55:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =DataCardKey55.Height
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =21 * Z
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30 * Z
+                        Wrap: =false
+                        Y: =DataCardKey55.Y
+            - Amount_DataCard7:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicNumberEdit
+                IsLocked: true
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  DataField: ="Amount"
+                  Default: =ThisItem.Amount
+                  DisplayName: =DataSourceInfo([@'Financial Submissions'],DataSourceInfo.DisplayName,Amount)
+                  Height: =50 * Z
+                  Required: =false
+                  Update: =Value(DataCardValue47.Text)
+                  Width: =640 * Z
+                  X: =0
+                  Y: =2
+                Children:
+                  - DataCardKey57:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(60, 60, 60, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =If(Phone, 38 * Z, 30 * Z)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =If(Phone, 20 * Z, 15 * Z)
+                        Text: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        Wrap: =false
+                        X: =30 * Z
+                        Y: =12 * Z
+                  - DataCardValue47:
+                      Control: Classic/TextInput@2.3.2
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), RGBA(190, 196, 202, 1), Color.Red)
+                        BorderThickness: =1
+                        Color: =RGBA(30, 30, 30, 1)
+                        Default: =Parent.Default
+                        DelayOutput: =true
+                        DisplayMode: =Parent.DisplayMode
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Format: =TextFormat.Number
+                        Height: =If(Phone, 66 * Z, 52 * Z)
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(255, 255, 255, 1)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =12 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =If(Phone, 20 * Z, 16 * Z)
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardKey57.Y + DataCardKey57.Height + 5 * Z
+                  - ErrorMessage57:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10 * Z
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24 * Z
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardValue47.Y + DataCardValue47.Height
+                  - StarVisible57:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =DataCardKey57.Height
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =21 * Z
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30 * Z
+                        Wrap: =false
+                        Y: =DataCardKey57.Y
+            - Donation Type_DataCard1:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicComboBoxEdit
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  DataField: ="Donation_x0020_Type"
+                  Default: =ThisItem.'Income Type'
+                  DisplayName: =DataSourceInfo([@'Financial Submissions'],DataSourceInfo.DisplayName,'Income Type')
+                  Height: =50 * Z
+                  Required: =false
+                  Update: =DataCardValue3.Selected
+                  Width: =640 * Z
+                  X: =0
+                  Y: =3
+                Children:
+                  - DataCardKey3:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(60, 60, 60, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =If(Phone, 38 * Z, 30 * Z)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =If(Phone, 20 * Z, 15 * Z)
+                        Text: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        Wrap: =false
+                        X: =30 * Z
+                        Y: =12 * Z
+                  - DataCardValue3:
+                      Control: Classic/ComboBox@2.4.0
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), RGBA(190, 196, 202, 1), Color.Red)
+                        BorderThickness: =1
+                        ChevronBackground: =RGBA(0, 0, 0, 0)
+                        ChevronFill: =RGBA(96, 96, 96, 1)
+                        ChevronHoverBackground: =RGBA(232, 240, 250, 1)
+                        ChevronHoverFill: =RGBA(56, 96, 178, 1)
+                        DefaultSelectedItems: =Parent.Default
+                        DisplayFields: =["Value"]
+                        DisplayMode: =Parent.DisplayMode
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =If(Phone, 66 * Z, 52 * Z)
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(186, 202, 226, 1)
+                        InputTextPlaceholder: ="Choose"
+                        Items: =Choices([@'Financial Submissions'].'Income Type')
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5 * Z, 0)
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        PressedColor: =RGBA(255, 255, 255, 1)
+                        PressedFill: =RGBA(0, 18, 107, 1)
+                        SearchFields: =["Value"]
+                        SelectMultiple: =false
+                        SelectionColor: =RGBA(255, 255, 255, 1)
+                        SelectionFill: =RGBA(56, 96, 178, 1)
+                        SelectionTagColor: =RGBA(30, 30, 30, 1)
+                        SelectionTagFill: =RGBA(0, 0, 0, 0)
+                        Size: =If(Phone, 20 * Z, 16 * Z)
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardKey3.Y + DataCardKey3.Height + 5 * Z
+                  - ErrorMessage3:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10 * Z
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24 * Z
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardValue3.Y + DataCardValue3.Height
+                  - StarVisible3:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =DataCardKey3.Height
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =21 * Z
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30 * Z
+                        Wrap: =false
+                        Y: =DataCardKey3.Y
+            - Donation Date_DataCard1:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicDateEdit
+                IsLocked: true
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  DataField: ="Donation_x0020_Date"
+                  Default: =ThisItem.'Income Date'
+                  DisplayName: =DataSourceInfo([@'Financial Submissions'],DataSourceInfo.DisplayName,'Income Date')
+                  Height: =50 * Z
+                  Required: =false
+                  Update: =DataCardValue2.SelectedDate
+                  Width: =640 * Z
+                  X: =0
+                  Y: =4
+                Children:
+                  - DataCardKey2:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(60, 60, 60, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =If(Phone, 38 * Z, 30 * Z)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =If(Phone, 20 * Z, 15 * Z)
+                        Text: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        Wrap: =false
+                        X: =30 * Z
+                        Y: =12 * Z
+                  - DataCardValue2:
+                      Control: Classic/DatePicker@2.6.0
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), RGBA(190, 196, 202, 1), Color.Red)
+                        BorderThickness: =1
+                        DefaultDate: =Parent.Default
+                        DisplayMode: =Parent.DisplayMode
+                        EndYear: =Year(Today())+100
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =If(Phone, 66 * Z, 52 * Z)
+                        IconBackground: =RGBA(0, 0, 0, 0)
+                        IconFill: =RGBA(96, 96, 96, 1)
+                        IsEditable: =true
+                        PaddingBottom: =0
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5 * Z, 0)
+                        PaddingRight: =5 * Z
+                        Size: =If(Phone, 20 * Z, 16 * Z)
+                        StartYear: =1899
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardKey2.Y + DataCardKey2.Height + 5 * Z
+                  - ErrorMessage2:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10 * Z
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24 * Z
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardValue2.Y + DataCardValue2.Height
+                  - StarVisible2:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =DataCardKey2.Height
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =21 * Z
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30 * Z
+                        Wrap: =false
+                        Y: =DataCardKey2.Y
+            - Project_DataCard3:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicComboBoxEdit
+                IsLocked: true
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  DataField: ="Project"
+                  Default: =ThisItem.Project
+                  DisplayName: =DataSourceInfo([@'Financial Submissions'],DataSourceInfo.DisplayName,Project)
+                  Height: =50 * Z
+                  Required: =false
+                  Update: |-
+                    =With({p: LookUp('Chargeable Projects', 'Project Name' = "Income")}, {Id: p.ID, Value: p.'Project Name'})
+                  Visible: =false
+                  Width: =640 * Z
+                  X: =0
+                  Y: =5
+                Children:
+                  - DataCardKey29:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(60, 60, 60, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =If(Phone, 38 * Z, 30 * Z)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =If(Phone, 20 * Z, 15 * Z)
+                        Text: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        Wrap: =false
+                        X: =30 * Z
+                        Y: =12 * Z
+                  - DataCardValue23:
+                      Control: Classic/ComboBox@2.4.0
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), RGBA(190, 196, 202, 1), Color.Red)
+                        BorderThickness: =1
+                        ChevronBackground: =RGBA(0, 0, 0, 0)
+                        ChevronFill: =RGBA(96, 96, 96, 1)
+                        ChevronHoverBackground: =RGBA(232, 240, 250, 1)
+                        ChevronHoverFill: =RGBA(56, 96, 178, 1)
+                        DefaultSelectedItems: =Parent.Default
+                        DisplayFields: =["Value"]
+                        DisplayMode: =Parent.DisplayMode
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =If(Phone, 66 * Z, 52 * Z)
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(186, 202, 226, 1)
+                        InputTextPlaceholder: ="Choose"
+                        Items: =Choices([@'Financial Submissions'].Project)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5 * Z, 0)
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        PressedColor: =RGBA(255, 255, 255, 1)
+                        PressedFill: =RGBA(0, 18, 107, 1)
+                        SearchFields: =["Value"]
+                        SelectMultiple: =false
+                        SelectionColor: =RGBA(255, 255, 255, 1)
+                        SelectionFill: =RGBA(56, 96, 178, 1)
+                        SelectionTagColor: =RGBA(30, 30, 30, 1)
+                        SelectionTagFill: =RGBA(0, 0, 0, 0)
+                        Size: =If(Phone, 20 * Z, 16 * Z)
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardKey29.Y + DataCardKey29.Height + 5 * Z
+                  - ErrorMessage29:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10 * Z
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24 * Z
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardValue23.Y + DataCardValue23.Height
+                  - StarVisible29:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =DataCardKey29.Height
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =21 * Z
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30 * Z
+                        Wrap: =false
+                        Y: =DataCardKey29.Y
+            - Cost Account_DataCard7:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicComboBoxEdit
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  DataField: ="Cost_x0020_Account"
+                  Default: =ThisItem.'Cost Account'
+                  DisplayName: =DataSourceInfo([@'Financial Submissions'],DataSourceInfo.DisplayName,'Cost Account')
+                  Height: =50 * Z
+                  Required: =true
+                  Update: |-
+                    ={
+                        Id: CostAccountDropdownIncome.Selected.ID,
+                        Value: CostAccountDropdownIncome.Selected.'Cost Account Number and Description'
+                    }
+                  Width: =640 * Z
+                  X: =0
+                  Y: =6
+                Children:
+                  - DataCardKey60:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(60, 60, 60, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =If(Phone, 38 * Z, 30 * Z)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =If(Phone, 20 * Z, 15 * Z)
+                        Text: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        Wrap: =false
+                        X: =30 * Z
+                        Y: =12 * Z
+                  - CostAccountDropdownIncome:
+                      Control: Classic/ComboBox@2.4.0
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), RGBA(190, 196, 202, 1), Color.Red)
+                        BorderThickness: =1
+                        ChevronBackground: =RGBA(0, 0, 0, 0)
+                        ChevronFill: =RGBA(96, 96, 96, 1)
+                        ChevronHoverBackground: =RGBA(232, 240, 250, 1)
+                        ChevronHoverFill: =RGBA(56, 96, 178, 1)
+                        DisplayFields: =["Cost_x0020_Account_x0020_Number_"]
+                        DisplayMode: =Parent.DisplayMode.Edit
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =If(Phone, 66 * Z, 52 * Z)
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(186, 202, 226, 1)
+                        InputTextPlaceholder: ="Choose"
+                        Items: =Sort(Filter('Chargeable Cost Accounts', 'Project Class'.Value = "Income"), 'Cost Account Number', SortOrder.Ascending)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5 * Z, 0)
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        PressedColor: =RGBA(255, 255, 255, 1)
+                        PressedFill: =RGBA(0, 18, 107, 1)
+                        SearchFields: =["Cost_x0020_Account_x0020_Number_"]
+                        SelectMultiple: =false
+                        SelectionColor: =RGBA(255, 255, 255, 1)
+                        SelectionFill: =RGBA(56, 96, 178, 1)
+                        SelectionTagColor: =RGBA(30, 30, 30, 1)
+                        SelectionTagFill: =RGBA(0, 0, 0, 0)
+                        Size: =If(Phone, 20 * Z, 16 * Z)
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardKey60.Y + DataCardKey60.Height + 5 * Z
+                  - ErrorMessage60:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10 * Z
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24 * Z
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =CostAccountDropdownIncome.Y + CostAccountDropdownIncome.Height
+                  - StarVisible60:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =DataCardKey60.Height
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =21 * Z
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30 * Z
+                        Wrap: =false
+                        Y: =DataCardKey60.Y
+            - Comments_DataCard2:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicTextualEdit
+                IsLocked: true
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  DataField: ="Comments"
+                  Default: =ThisItem.Comments
+                  DisplayName: =DataSourceInfo([@'Financial Submissions'],DataSourceInfo.DisplayName,Comments)
+                  Height: =50 * Z
+                  MaxLength: =DataSourceInfo([@'Financial Submissions'], DataSourceInfo.MaxLength, Comments)
+                  Required: =false
+                  Update: =DataCardValue24.Text
+                  Width: =640 * Z
+                  X: =0
+                  Y: =7
+                Children:
+                  - DataCardKey30:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(60, 60, 60, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =If(Phone, 38 * Z, 30 * Z)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =If(Phone, 20 * Z, 15 * Z)
+                        Text: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        Wrap: =false
+                        X: =30 * Z
+                        Y: =12 * Z
+                  - DataCardValue24:
+                      Control: Classic/TextInput@2.3.2
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), RGBA(190, 196, 202, 1), Color.Red)
+                        BorderThickness: =1
+                        Color: =RGBA(30, 30, 30, 1)
+                        Default: =Parent.Default
+                        DelayOutput: =true
+                        DisplayMode: =Parent.DisplayMode
+                        FocusedBorderColor: =RGBA(56, 96, 178, 1)
+                        FocusedBorderThickness: =2
+                        Font: =Font.'Open Sans'
+                        Height: =If(Phone, 66 * Z, 52 * Z)
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverFill: =RGBA(255, 255, 255, 1)
+                        MaxLength: =Parent.MaxLength
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =12 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        RadiusBottomLeft: =6 * Z
+                        RadiusBottomRight: =6 * Z
+                        RadiusTopLeft: =6 * Z
+                        RadiusTopRight: =6 * Z
+                        Size: =If(Phone, 20 * Z, 16 * Z)
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardKey30.Y + DataCardKey30.Height + 5 * Z
+                  - ErrorMessage30:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10 * Z
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24 * Z
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardValue24.Y + DataCardValue24.Height
+                  - StarVisible30:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =DataCardKey30.Height
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =21 * Z
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30 * Z
+                        Wrap: =false
+                        Y: =DataCardKey30.Y
+            - Attachments_DataCard3:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicAttachmentsEdit
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  DataField: ="{Attachments}"
+                  Default: =ThisItem.Attachments
+                  DisplayName: =DataSourceInfo([@'Financial Submissions'],DataSourceInfo.DisplayName,Attachments)
+                  Height: =50 * Z
+                  Required: =false
+                  Update: =DataCardValue51.Attachments
+                  Width: =640 * Z
+                  X: =0
+                  Y: =8
+                Children:
+                  - DataCardKey63:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(60, 60, 60, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =If(Phone, 38 * Z, 30 * Z)
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =If(Phone, 20 * Z, 15 * Z)
+                        Text: ="Attachments"
+                        Width: =Parent.Width - 60 * Z
+                        Wrap: =false
+                        X: =30 * Z
+                        Y: =12 * Z
+                  - DataCardValue51:
+                      Control: Attachments@2.3.0
+                      MetadataKey: FieldValue
+                      Properties:
+                        AddAttachmentColor: =RGBA(0, 103, 184, 1)
+                        AddAttachmentText: ="+ Add a file"
+                        AddedItemFill: =RGBA(228, 244, 230, 1)
+                        BorderColor: =If(IsBlank(Parent.Error), RGBA(205, 210, 215, 1), Color.Red)
+                        BorderStyle: =BorderStyle.Dashed
+                        Color: =RGBA(60, 60, 60, 1)
+                        DisplayMode: =Parent.DisplayMode
+                        DropTargetBackgroundColor: =RGBA(232, 240, 250, 0.9)
+                        DropTargetBorderColor: =RGBA(56, 96, 178, 1)
+                        DropTargetTextColor: =RGBA(56, 96, 178, 1)
+                        Fill: =RGBA(250, 251, 252, 1)
+                        FocusedBorderThickness: =4 * Z
+                        Font: =Font.'Open Sans'
+                        Height: =If(Phone, 190 * Z, 150 * Z)
+                        HoverBorderColor: =RGBA(56, 96, 178, 1)
+                        HoverColor: =RGBA(60, 60, 60, 1)
+                        HoverFill: =RGBA(250, 251, 252, 1)
+                        ItemColor: =RGBA(30, 30, 30, 1)
+                        ItemFill: =RGBA(238, 242, 247, 1)
+                        ItemHoverFill: =RGBA(222, 233, 247, 1)
+                        ItemSpacing: =4
+                        Items: =Parent.Default
+                        NoAttachmentsColor: =RGBA(96, 96, 96, 1)
+                        NoAttachmentsText: ="No files yet. Add a receipt, invoice or photo."
+                        PaddingBottom: =10 * Z
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 10 * Z, 0)
+                        PaddingRight: =10 * Z
+                        PaddingTop: =10 * Z
+                        PressedColor: =RGBA(60, 60, 60, 1)
+                        PressedFill: =RGBA(250, 251, 252, 1)
+                        RemovedItemFill: =RGBA(252, 232, 232, 1)
+                        Size: =If(Phone, 19 * Z, 16 * Z)
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardKey63.Y + DataCardKey63.Height + 5 * Z
+                  - ErrorMessage63:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10 * Z
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24 * Z
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60 * Z
+                        X: =30 * Z
+                        Y: =DataCardValue51.Y + DataCardValue51.Height
+                  - StarVisible63:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =DataCardKey63.Height
+                        PaddingBottom: =5 * Z
+                        PaddingLeft: =5 * Z
+                        PaddingRight: =5 * Z
+                        PaddingTop: =5 * Z
+                        Size: =21 * Z
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30 * Z
+                        Wrap: =false
+                        Y: =DataCardKey63.Y
+      - btnSubmitIncome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(40, 122, 54, 1)
+            Font: =Font.'Open Sans'
+            Height: =If(Phone, 84 * Z, 68 * Z)
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(40, 122, 54, 1), -15%)
+            OnSelect: =If(IsBlank(CostAccountDropdownIncome.Selected), Notify("Please choose a Cost Account", NotificationType.Error), If(CountRows(DataCardValue51.Attachments) = 0, If(Confirm("No attachment found. Do you want to submit anyway?"), SubmitForm(IncomeThingForm)), SubmitForm(IncomeThingForm)))
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =8 * Z
+            RadiusBottomRight: =8 * Z
+            RadiusTopLeft: =8 * Z
+            RadiusTopRight: =8 * Z
+            Size: =If(Phone, 26 * Z, 22 * Z)
+            Text: ="Submit"
+            Width: =580 * Z
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =IncomeThingForm.Y + IncomeThingForm.Height + 20 * Z

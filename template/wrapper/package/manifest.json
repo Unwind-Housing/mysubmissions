@@ -1,0 +1,66 @@
+{
+  "schema": "1.0",
+  "details": {
+    "displayName": "MySubmissions",
+    "description": "",
+    "createdTime": "2026-01-01T00:00:00.0000000Z",
+    "packageTelemetryId": "00000000-0000-4000-8000-000000000000",
+    "creator": "",
+    "sourceEnvironment": ""
+  },
+  "resources": {
+    "a804bcaf-6b24-4615-ac1f-b5175808c219": {
+      "type": "Microsoft.PowerApps/apps",
+      "suggestedCreationType": "Update",
+      "creationType": "New, Update",
+      "details": {
+        "displayName": "My Submissions"
+      },
+      "configurableBy": "User",
+      "dependsOn": [
+        "74ba8a61-278a-4a16-a132-8e841adff5c3",
+        "da71e2c7-799a-4ea9-8d2e-9b3a79950e89",
+        "e53c0272-86eb-4869-8263-589718791e86"
+      ]
+    },
+    "74ba8a61-278a-4a16-a132-8e841adff5c3": {
+      "id": "/providers/Microsoft.PowerApps/apis/shared_office365groups",
+      "name": "shared_office365groups",
+      "type": "Microsoft.PowerApps/apis",
+      "suggestedCreationType": "Existing",
+      "details": {
+        "displayName": "Office 365 Groups",
+        "iconUri": "https://static.powerapps.com/resource/ppcr/releases/v1.0.1831/1.0.1831.5084/office365groups/icon.png"
+      },
+      "configurableBy": "System",
+      "hierarchy": "Child",
+      "dependsOn": []
+    },
+    "da71e2c7-799a-4ea9-8d2e-9b3a79950e89": {
+      "id": "/providers/Microsoft.PowerApps/apis/shared_flowmanagement",
+      "name": "shared_flowmanagement",
+      "type": "Microsoft.PowerApps/apis",
+      "suggestedCreationType": "Existing",
+      "details": {
+        "displayName": "Power Automate Management",
+        "iconUri": "https://static.powerapps.com/resource/ppcr/releases/v1.0.1827/1.0.1827.4908/flowmanagement/icon.png"
+      },
+      "configurableBy": "System",
+      "hierarchy": "Child",
+      "dependsOn": []
+    },
+    "e53c0272-86eb-4869-8263-589718791e86": {
+      "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+      "name": "shared_sharepointonline",
+      "type": "Microsoft.PowerApps/apis",
+      "suggestedCreationType": "Existing",
+      "details": {
+        "displayName": "SharePoint",
+        "iconUri": "https://static.powerapps.com/resource/ppcr/releases/v1.0.1834/1.0.1834.5089/sharepointonline/icon.png"
+      },
+      "configurableBy": "System",
+      "hierarchy": "Child",
+      "dependsOn": []
+    }
+  }
+}

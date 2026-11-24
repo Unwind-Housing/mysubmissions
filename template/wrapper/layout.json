@@ -1,0 +1,41 @@
+{
+  "package_entries": [
+    "Microsoft.PowerApps/apps/896853103574296563/896853103574296563.json",
+    "Microsoft.PowerApps/apps/896853103574296563/N47934e5a-6c6f-413e-aac6-639c43d265f2-identity.json",
+    "Microsoft.PowerApps/apps/896853103574296563/N73de7353-1686-46d4-9a90-13ebb7926d0c-document.msapp",
+    "Microsoft.PowerApps/apps/896853103574296563/Nb03cb13c-3ba8-4823-9369-2f24581dd097-logoSmallFile",
+    "manifest.json"
+  ],
+  "msapp_entry": "Microsoft.PowerApps/apps/896853103574296563/N73de7353-1686-46d4-9a90-13ebb7926d0c-document.msapp",
+  "msapp_entries": [
+    "Header.json",
+    "Properties.json",
+    "Controls\\21.json",
+    "Src\\CreateFinancialThing.pa.yaml",
+    "Controls\\69.json",
+    "Src\\SuccessScreen.pa.yaml",
+    "Controls\\74.json",
+    "Src\\CreateIncomeThing.pa.yaml",
+    "Controls\\126.json",
+    "Src\\YourFinancialSubmissions.pa.yaml",
+    "Controls\\238.json",
+    "Src\\IncomeSuccessScreen.pa.yaml",
+    "Controls\\244.json",
+    "Src\\FinancialApprovals.pa.yaml",
+    "Controls\\296.json",
+    "Src\\IncomeApprovals.pa.yaml",
+    "Controls\\345.json",
+    "Src\\LandingPage.pa.yaml",
+    "Controls\\1.json",
+    "Src\\App.pa.yaml",
+    "Src\\_EditorState.pa.yaml",
+    "References\\Themes.json",
+    "References\\DataSources.json",
+    "References\\ModernThemes.json",
+    "References\\Resources.json",
+    "References\\Templates.json",
+    "References\\AuxDataMap.json",
+    "Resources\\PublishInfo.json",
+    "Resources\\lhsddtzs.jpg"
+  ]
+}

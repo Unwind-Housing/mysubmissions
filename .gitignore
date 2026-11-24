@@ -1,0 +1,22 @@
+# An organization's own folder: settings, lock file, logo, package wrapper. Private to that organization.
+clients/
+
+# Raw exports from Power Apps, built packages, working files
+exports/
+unpacked/
+dist/
+*.zip
+*.msapp
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Credentials and local notes
+.env
+*.secret
+CLAUDE.local.md
+
+# OS
+.DS_Store

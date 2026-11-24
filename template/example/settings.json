@@ -1,0 +1,51 @@
+{
+  "org": {
+    "name": "Example Housing Trust",
+    "short": "EHT",
+    "appName": "EHT Submissions"
+  },
+  "brand": {
+    "headerColor": "#2F6F5E"
+  },
+  "sharepoint": {
+    "listsSite": "https://example.sharepoint.com/sites/Finance",
+    "lists": {
+      "submissions": "Financial Submissions",
+      "projects": "Chargeable Projects",
+      "costAccounts": "Chargeable Cost Accounts",
+      "reminders": "Payment Reminders"
+    }
+  },
+  "approvers": {
+    "source": "groups",
+    "financial": "Finance Approvers",
+    "income": "Income Approvers"
+  },
+  "features": {
+    "bankDeposit": true,
+    "income": "income",
+    "grants": "off",
+    "approvalScreens": "separate",
+    "addProjectLink": true,
+    "confirmationEmail": false,
+    "timecards": false
+  },
+  "weekly": {
+    "library": "Processed Financial Submissions",
+    "template": "Financial Submissions Template.xlsx",
+    "subject": "EHT Weekly Financials",
+    "recipients": [
+      "director@example.org",
+      "books@examplecpa.com"
+    ],
+    "bookkeepers": [
+      "books@examplecpa.com"
+    ],
+    "financeDirector": [
+      "finance@example.org"
+    ],
+    "replyTo": "finance@example.org",
+    "runFromApp": false,
+    "testMode": true
+  }
+}

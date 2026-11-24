@@ -1,0 +1,167 @@
+{
+  "schemaVersion": "1.0",
+  "appDefinitionTemplate": {
+    "id": "/providers/Microsoft.PowerApps/apps/",
+    "type": "Microsoft.PowerApps/apps",
+    "tags": {
+      "primaryDeviceWidth": "640",
+      "primaryDeviceHeight": "1356",
+      "supportsPortrait": "true",
+      "supportsLandscape": "true",
+      "primaryFormFactor": "Phone",
+      "publisherVersion": "3.26103.35",
+      "minimumRequiredApiVersion": "2.2.0",
+      "hasComponent": "false",
+      "hasUnlockedComponent": "false",
+      "isUnifiedRootApp": "false",
+      "sienaVersion": "20261029T160404Z-3.26101.10.0",
+      "showStatusBar": "false",
+      "offlineLargeFilesSupport": "false",
+      "m365CopilotSettingValue": "0"
+    },
+    "properties": {
+      "appVersion": "2026-11-22T03:05:31Z",
+      "lifeCycleId": "Published",
+      "createdByClientVersion": {
+        "major": 3,
+        "minor": 26103,
+        "build": 35,
+        "revision": 0,
+        "majorRevision": 0,
+        "minorRevision": 0
+      },
+      "minClientVersion": {
+        "major": 3,
+        "minor": 26103,
+        "build": 35,
+        "revision": 0,
+        "majorRevision": 0,
+        "minorRevision": 0
+      },
+      "backgroundColor": "rgba(255, 255, 255, 1)",
+      "backgroundImageUri": "/896853103574296563/Nb03cb13c-3ba8-4823-9369-2f24581dd097-logoSmallFile",
+      "displayName": "My Submissions",
+      "description": "",
+      "commitMessage": "",
+      "appUris": {
+        "documentUri": {
+          "value": "/896853103574296563/N73de7353-1686-46d4-9a90-13ebb7926d0c-document.msapp"
+        },
+        "imageUris": [],
+        "additionalUris": [
+          {
+            "isSolutionAware": false,
+            "value": "/896853103574296563/N47934e5a-6c6f-413e-aac6-639c43d265f2-identity.json"
+          }
+        ]
+      },
+      "createdTime": "0001-01-01T00:00:00Z",
+      "lastModifiedTime": "0001-01-01T00:00:00Z",
+      "sharedGroupsCount": 0,
+      "sharedUsersCount": 0,
+      "connectionReferences": {
+        "d38bb040-3115-4e5e-962e-486818d2b47f": {
+          "id": "74ba8a61-278a-4a16-a132-8e841adff5c3",
+          "displayName": "Office 365 Groups",
+          "iconUri": "https://static.powerapps.com/resource/ppcr/releases/v1.0.1831/1.0.1831.5084/office365groups/icon.png",
+          "dataSources": [
+            "Office365Groups"
+          ],
+          "dependencies": [],
+          "dependents": [],
+          "parameterHints": {},
+          "parameterHintsV2": {},
+          "isOnPremiseConnection": false,
+          "bypassConsent": false,
+          "dataSets": {},
+          "apiTier": "Standard",
+          "isCustomApiConnection": false,
+          "actions": [
+            "ListGroupMembers"
+          ]
+        },
+        "28dcc4e0-1c54-430f-992e-b670f559c368": {
+          "id": "da71e2c7-799a-4ea9-8d2e-9b3a79950e89",
+          "displayName": "Power Automate Management",
+          "iconUri": "https://static.powerapps.com/resource/ppcr/releases/v1.0.1827/1.0.1827.4908/flowmanagement/icon.png",
+          "dataSources": [
+            "PowerAutomateManagement"
+          ],
+          "dependencies": [],
+          "dependents": [],
+          "parameterHints": {},
+          "parameterHintsV2": {},
+          "isOnPremiseConnection": false,
+          "bypassConsent": false,
+          "dataSets": {},
+          "apiTier": "Standard",
+          "isCustomApiConnection": false,
+          "authenticationType": "firstParty"
+        },
+        "375a8382-184f-4685-b08c-e162c182f683": {
+          "id": "e53c0272-86eb-4869-8263-589718791e86",
+          "displayName": "SharePoint",
+          "iconUri": "https://static.powerapps.com/resource/ppcr/releases/v1.0.1834/1.0.1834.5089/sharepointonline/icon.png",
+          "dataSources": [
+            "Financial Submissions",
+            "Chargeable Cost Accounts",
+            "Chargeable Projects"
+          ],
+          "dependencies": [],
+          "dependents": [
+            "1424a5cc-8585-4869-a2fe-2078d1cbaf97"
+          ],
+          "parameterHints": {},
+          "parameterHintsV2": {},
+          "isOnPremiseConnection": false,
+          "bypassConsent": false,
+          "dataSets": {
+            "https://example.sharepoint.com/sites/Finance": {
+              "dataSources": {
+                "Financial Submissions": {
+                  "tableName": "00000000-0000-4000-8000-000000000011"
+                },
+                "Chargeable Cost Accounts": {
+                  "tableName": "00000000-0000-4000-8000-000000000013"
+                },
+                "Chargeable Projects": {
+                  "tableName": "00000000-0000-4000-8000-000000000012"
+                }
+              }
+            }
+          },
+          "apiTier": "Standard",
+          "isCustomApiConnection": false,
+          "actions": [
+            "providers/PowerPlatform.Governance/Operations/Read",
+            "providers/PowerPlatform.Governance/Operations/Write",
+            "providers/PowerPlatform.Governance/Operations/Delete"
+          ]
+        }
+      },
+      "databaseReferences": {},
+      "almMode": "Environment",
+      "performanceOptimizationEnabled": true,
+      "canConsumeAppPass": true,
+      "enableModernRuntimeMode": false,
+      "executionRestrictions": {
+        "isTeamsOnly": false,
+        "dataLossPreventionEvaluationResult": {
+          "status": "Compliant",
+          "lastEvaluationDate": "2026-11-22T03:05:58.4830523Z",
+          "violations": [],
+          "violationsByPolicy": [],
+          "violationErrorMessage": "The app uses the following connectors: shared_office365groups, shared_flowmanagement, shared_sharepointonline, shared_logicflows, shared_excelonlinebusiness, shared_office365."
+        },
+        "httpActionRestriction": {
+          "appUsesSharepointHttpAction": false,
+          "enforcementStrategy": "Legacy",
+          "evaluationTime": "2026-11-22T03:05:58.482904Z"
+        }
+      }
+    },
+    "isAppComponentLibrary": false,
+    "appType": "ClassicCanvasApp",
+    "appComponents": []
+  }
+}

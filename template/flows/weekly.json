@@ -1,0 +1,1090 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "$authentication": {
+        "defaultValue": {},
+        "type": "SecureObject"
+      },
+      "$connections": {
+        "defaultValue": {},
+        "type": "Object"
+      }
+    },
+    "staticResults": {
+      "Get_items0": {
+        "status": "Succeeded",
+        "outputs": {
+          "statusCode": "OK",
+          "headers": {}
+        }
+      }
+    },
+    "triggers": {
+      "manual": {
+        "metadata": {
+          "operationMetadataId": "28941912-5fe3-4cea-a8a1-4e9f19a94900"
+        },
+        "type": "Request",
+        "kind": "PowerAppV2",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "required": [
+              "text"
+            ],
+            "properties": {
+              "text": {
+                "title": "Date",
+                "type": "string",
+                "x-ms-dynamically-added": true,
+                "description": "The date for the folder name and the Processed Date column, as yyyy-mm-dd",
+                "x-ms-content-hint": "TEXT"
+              }
+            }
+          }
+        }
+      }
+    },
+    "actions": {
+      "Pull_out_attachments_and_prepare": {
+        "foreach": "@outputs('Get_all_items_that_are_ready_for_processing')?['body/value']",
+        "actions": {
+          "Get_attachments": {
+            "runAfter": {
+              "Restart_file_count": [
+                "Succeeded"
+              ]
+            },
+            "metadata": {
+              "operationMetadataId": "76d279f7-e3df-4a83-91ef-c07fd66538b9"
+            },
+            "type": "OpenApiConnection",
+            "inputs": {
+              "parameters": {
+                "dataset": "__MS_LISTS_SITE__",
+                "table": "__MS_LIST_SUBMISSIONS__",
+                "itemId": "@items('Pull_out_attachments_and_prepare')?['ID']"
+              },
+              "host": {
+                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "connectionName": "shared_sharepointonline_7",
+                "operationId": "GetItemAttachments"
+              },
+              "authentication": {
+                "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                "type": "Raw"
+              }
+            }
+          },
+          "Apply_to_each_2": {
+            "foreach": "@body('Get_attachments')",
+            "actions": {
+              "Get_attachment_content": {
+                "metadata": {
+                  "operationMetadataId": "fcf1c747-dd05-449a-bb51-087d414c8310"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "dataset": "__MS_LISTS_SITE__",
+                    "table": "__MS_LIST_SUBMISSIONS__",
+                    "itemId": "@items('Pull_out_attachments_and_prepare')?['ID']",
+                    "attachmentId": "@item()?['Id']"
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline_9",
+                    "operationId": "GetAttachmentContent"
+                  },
+                  "authentication": {
+                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                    "type": "Raw"
+                  }
+                }
+              },
+              "Create_file": {
+                "runAfter": {
+                  "Increment_variable": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "cb0f7e0b-a9d2-4f39-9a97-f13410f37417"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "dataset": "__MS_OUTPUT_SITE__",
+                    "folderPath": "/__MS_LIBRARY_NAME__/@{variables('FolderName')}/@{items('Pull_out_attachments_and_prepare')?['Type_x0020_of_x0020_thing/Value']}",
+                    "name": "@{items('Pull_out_attachments_and_prepare')?['Type_x0020_of_x0020_thing']?['Value']} @{formatNumber(variables('ItemNo'), '000')} - @{items('Pull_out_attachments_and_prepare')?['Title']} - @{replace(coalesce(items('Pull_out_attachments_and_prepare')?['Cost_x0020_Account']?['Value'], ''), ':', '-')}@{if(empty(string(items('Pull_out_attachments_and_prepare')?['Amount'])), '', concat(' - ', formatNumber(float(items('Pull_out_attachments_and_prepare')?['Amount']), 'C2', 'en-US')))}_@{variables('Step')}.@{last(split(item()?['DisplayName'], '.'))}",
+                    "body": "@body('Get_attachment_content')"
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline_10",
+                    "operationId": "CreateFile"
+                  },
+                  "authentication": {
+                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                    "type": "Raw"
+                  }
+                },
+                "runtimeConfiguration": {
+                  "contentTransfer": {
+                    "transferMode": "Chunked"
+                  }
+                }
+              },
+              "Increment_variable": {
+                "runAfter": {
+                  "Get_attachment_content": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "e9a439e1-be56-439c-82ed-ee23a9474633"
+                },
+                "type": "IncrementVariable",
+                "inputs": {
+                  "name": "Step"
+                }
+              },
+              "Add_file_link": {
+                "runAfter": {
+                  "Create_file": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "AppendToArrayVariable",
+                "inputs": {
+                  "name": "FileLinks",
+                  "value": "@concat('__MS_OUTPUT_SITE__/_layouts/15/embed.aspx?UniqueId=', toLower(substring(outputs('Create_file')?['body/ETag'], 2, 36)))"
+                }
+              }
+            },
+            "runAfter": {
+              "Get_attachments": [
+                "Succeeded"
+              ]
+            },
+            "metadata": {
+              "operationMetadataId": "27639c8f-52d4-4113-b09c-753617640a4a"
+            },
+            "type": "Foreach",
+            "runtimeConfiguration": {
+              "concurrency": {
+                "repetitions": 1
+              }
+            }
+          },
+          "Compose_Excel_Row": {
+            "runAfter": {
+              "Mark_processed_unless_testing": [
+                "Succeeded"
+              ]
+            },
+            "type": "Compose",
+            "inputs": {
+              "ItemNo": "@{variables('ItemNo')}",
+              "Type": "@{items('Pull_out_attachments_and_prepare')?['Type_x0020_of_x0020_thing']?['Value']}",
+              "Vendor": "@{items('Pull_out_attachments_and_prepare')?['Title']}",
+              "Project": "@{items('Pull_out_attachments_and_prepare')?['Project/Value']}",
+              "CostAccount": "@{items('Pull_out_attachments_and_prepare')?['Cost_x0020_Account']?['Value']}",
+              "Comment": "@{items('Pull_out_attachments_and_prepare')?['Comments']}",
+              "Amount": "@{items('Pull_out_attachments_and_prepare')?['Amount']}",
+              "ProcessedDate": "@{triggerBody()?['text']}",
+              "LinkToThing": "@{items('Pull_out_attachments_and_prepare')?['{Link}']}",
+              "FileCount": "@{length(body('Get_attachments'))}",
+              "File1URL": "@{if(greater(length(variables('FileLinks')), 0), variables('FileLinks')[0], '')}",
+              "File2URL": "@{if(greater(length(variables('FileLinks')), 1), variables('FileLinks')[1], '')}",
+              "File3URL": "@{if(greater(length(variables('FileLinks')), 3), if(equals(items('Pull_out_attachments_and_prepare')?['Type_x0020_of_x0020_thing']?['Value'], 'Invoice'), outputs('Create_Invoice_folder')?['body/{Link}'], if(equals(items('Pull_out_attachments_and_prepare')?['Type_x0020_of_x0020_thing']?['Value'], 'Receipt'), outputs('Create_Receipt_folder')?['body/{Link}'], if(equals(items('Pull_out_attachments_and_prepare')?['Type_x0020_of_x0020_thing']?['Value'], 'Reimbursement'), outputs('Create_Reimbursement_folder')?['body/{Link}'], if(equals(items('Pull_out_attachments_and_prepare')?['Type_x0020_of_x0020_thing']?['Value'], 'Deposit'), outputs('Create_Deposit_Folder')?['body/{Link}'], outputs('Create_root_folder')?['body/{Link}'])))), if(greater(length(variables('FileLinks')), 2), variables('FileLinks')[2], ''))}",
+              "FolderURL": "@{outputs('Create_root_folder')?['body/{Link}']}"
+            }
+          },
+          "Add_a_row_into_a_table": {
+            "runAfter": {
+              "Compose_Excel_Row": [
+                "Succeeded"
+              ]
+            },
+            "type": "OpenApiConnection",
+            "inputs": {
+              "parameters": {
+                "source": "__MS_EXCEL_SOURCE__",
+                "drive": "__MS_EXCEL_DRIVE__",
+                "file": "@{variables('FolderName')}/FinancialThings-@{variables('FolderName')}.xlsx",
+                "table": "WeeklySubmissions",
+                "item": "@outputs('Compose_Excel_Row')"
+              },
+              "host": {
+                "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                "connectionName": "shared_excelonlinebusiness",
+                "operationId": "AddRowV2"
+              },
+              "authentication": {
+                "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                "type": "Raw"
+              }
+            }
+          },
+          "Clear_FileLinks": {
+            "runAfter": {},
+            "type": "SetVariable",
+            "inputs": {
+              "name": "FileLinks",
+              "value": []
+            }
+          },
+          "Next_item_number": {
+            "runAfter": {
+              "Clear_FileLinks": [
+                "Succeeded"
+              ]
+            },
+            "type": "IncrementVariable",
+            "inputs": {
+              "name": "ItemNo",
+              "value": 1
+            }
+          },
+          "Restart_file_count": {
+            "runAfter": {
+              "Next_item_number": [
+                "Succeeded"
+              ]
+            },
+            "type": "SetVariable",
+            "inputs": {
+              "name": "Step",
+              "value": 0
+            }
+          },
+          "Mark_processed_unless_testing": {
+            "actions": {
+              "Update_item": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "62871f51-2ab9-491c-adfa-330b45158dcd"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "dataset": "__MS_LISTS_SITE__",
+                    "table": "__MS_LIST_SUBMISSIONS__",
+                    "id": "@items('Pull_out_attachments_and_prepare')?['ID']",
+                    "item/Title": "@items('Pull_out_attachments_and_prepare')?['Title']",
+                    "item/Processed": true,
+                    "item/ProcessedDate": "@utcNow()",
+                    "item/Amount": "@items('Pull_out_attachments_and_prepare')?['Amount']"
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline_8",
+                    "operationId": "PatchItem"
+                  },
+                  "authentication": {
+                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                    "type": "Raw"
+                  }
+                }
+              }
+            },
+            "runAfter": {
+              "Apply_to_each_2": [
+                "Succeeded"
+              ]
+            },
+            "else": {
+              "actions": {}
+            },
+            "expression": {
+              "and": [
+                {
+                  "equals": [
+                    "@variables('TestMode')",
+                    false
+                  ]
+                }
+              ]
+            },
+            "type": "If"
+          }
+        },
+        "runAfter": {
+          "Initialize_ItemNo": [
+            "Succeeded"
+          ]
+        },
+        "metadata": {
+          "operationMetadataId": "cb4fd6ce-ac56-442b-ae5e-1969345822dc"
+        },
+        "type": "Foreach",
+        "runtimeConfiguration": {
+          "concurrency": {
+            "repetitions": 1
+          }
+        }
+      },
+      "Create_root_folder": {
+        "runAfter": {
+          "Initialize_folder_name_(date)": [
+            "Succeeded"
+          ]
+        },
+        "metadata": {
+          "operationMetadataId": "afa7b565-850f-4040-977b-a95665953dea"
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "__MS_OUTPUT_SITE__",
+            "table": "__MS_LIBRARY_WEEKLY__",
+            "parameters/path": "@variables('FolderName')"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_1",
+            "operationId": "CreateNewFolder"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Initialize_folder_name_(date)": {
+        "runAfter": {
+          "Initialize_Bookkeepers": [
+            "Succeeded"
+          ]
+        },
+        "metadata": {
+          "operationMetadataId": "a9bb5a43-78d6-4941-8056-e6d67b87ee34"
+        },
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "FolderName",
+              "type": "string",
+              "value": "@{triggerBody()['text']}@{if(variables('TestMode'), '-TEST', '')}"
+            }
+          ]
+        }
+      },
+      "Create_Invoice_folder": {
+        "runAfter": {
+          "Get_file_properties": [
+            "Succeeded"
+          ]
+        },
+        "metadata": {
+          "operationMetadataId": "f4a96ed9-69e8-406e-96e2-12304201b5ba"
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "__MS_OUTPUT_SITE__",
+            "table": "__MS_LIBRARY_WEEKLY__",
+            "parameters/path": "@{variables('FolderName')}/Invoice"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_2",
+            "operationId": "CreateNewFolder"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Create_Receipt_folder": {
+        "runAfter": {
+          "Create_Invoice_folder": [
+            "Succeeded"
+          ]
+        },
+        "metadata": {
+          "operationMetadataId": "8b673796-8314-45b7-b378-84caee80346f"
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "__MS_OUTPUT_SITE__",
+            "table": "__MS_LIBRARY_WEEKLY__",
+            "parameters/path": "@{variables('FolderName')}/Receipt"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_3",
+            "operationId": "CreateNewFolder"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Get_all_items_that_are_ready_for_processing": {
+        "runAfter": {
+          "Create_Donation_Folder": [
+            "Succeeded"
+          ]
+        },
+        "metadata": {
+          "operationMetadataId": "c6514604-6297-4a5e-89a5-d762b70a6df9"
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "__MS_LISTS_SITE__",
+            "table": "__MS_LIST_SUBMISSIONS__",
+            "$filter": "((Approved eq '1') and (Processed ne '1')) or ((DonationRecorded eq '1') and (Processed ne '1'))"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_6",
+            "operationId": "GetItems"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        },
+        "runtimeConfiguration": {
+          "staticResult": {
+            "staticResultOptions": "Disabled",
+            "name": "Get_items0"
+          }
+        }
+      },
+      "Initialize_variable": {
+        "runAfter": {
+          "Get_all_items_that_are_ready_for_processing": [
+            "Succeeded"
+          ]
+        },
+        "metadata": {
+          "operationMetadataId": "3ab71f0d-e09e-4b6d-a8e2-e0d16ab7af85"
+        },
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "Step",
+              "type": "integer",
+              "value": 0
+            }
+          ]
+        }
+      },
+      "Create_Reimbursement_folder": {
+        "runAfter": {
+          "Create_Receipt_folder": [
+            "Succeeded"
+          ]
+        },
+        "metadata": {
+          "operationMetadataId": "0f20c591-c414-4823-ae8d-05a3e52ce75f"
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "__MS_OUTPUT_SITE__",
+            "table": "__MS_LIBRARY_WEEKLY__",
+            "parameters/path": "@{variables('FolderName')}/Reimbursement"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_4",
+            "operationId": "CreateNewFolder"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Create_Deposit_Folder": {
+        "runAfter": {
+          "Create_Reimbursement_folder": [
+            "Succeeded"
+          ]
+        },
+        "metadata": {
+          "operationMetadataId": "373bed16-caa6-4028-b3b2-2d0648e0b2b2"
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "__MS_OUTPUT_SITE__",
+            "table": "__MS_LIBRARY_WEEKLY__",
+            "parameters/path": "@{variables('FolderName')}/Deposit"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_5",
+            "operationId": "CreateNewFolder"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Send_an_email_(V2)": {
+        "runAfter": {
+          "Delay": [
+            "Succeeded"
+          ],
+          "Reminder_lines": [
+            "Succeeded"
+          ]
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "emailMessage/To": "__MS_FINANCE_DIRECTOR__@{if(variables('TestMode'), '', concat(';', variables('Recipients')))}",
+            "emailMessage/Subject": "@{if(variables('TestMode'), '[TEST v4] ', '')}__MS_SUBJECT__ - @{variables('FolderName')}@{if(equals(actions('Check_for_existing_workbook')?['status'], 'Succeeded'), ' (updated)', '')}",
+            "emailMessage/Body": "<p class=\"editor-paragraph\">__MS_GREETING__</p><br><p class=\"editor-paragraph\">Weekly Financial Processing is ready for __MS_ORG_NAME__.</p><p class=\"editor-paragraph\">@{if(equals(actions('Check_for_existing_workbook')?['status'], 'Succeeded'), concat(string(length(body('Get_all_items_that_are_ready_for_processing')?['value'])), if(equals(length(body('Get_all_items_that_are_ready_for_processing')?['value']), 1), ' more item', ' more items'), ' added (ItemNo ', string(add(length(body('Rows_already_filled_in')), 1)), ' to ', string(variables('ItemNo')), '). Same folder and workbook as earlier today.'), concat(string(length(body('Get_all_items_that_are_ready_for_processing')?['value'])), if(equals(length(body('Get_all_items_that_are_ready_for_processing')?['value']), 1), ' item', ' items'), ' this week (ItemNo 1 to ', string(variables('ItemNo')), ').'))}</p><br><p class=\"editor-paragraph\">Here is the folder with images of each financial thing:</p><p class=\"editor-paragraph\">@{outputs('Create_root_folder')?['body/{Link}']}</p><br><p class=\"editor-paragraph\">And here is an excel file with this week's combined details:</p><p class=\"editor-paragraph\">@{outputs('Get_file_properties')?['body/{Link}']}<br></p><br>@{if(empty(body('Reminders_due_soon')), '', concat('<p class=\"editor-paragraph\"><b>Payment reminders</b></p><ul>', join(body('Reminder_lines'), ''), '</ul><br>'))}<p class=\"editor-paragraph\">Thank you!</p><br>",
+            "emailMessage/ReplyTo": "__MS_REPLY_TO__",
+            "emailMessage/Importance": "Normal"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+            "connectionName": "shared_office365",
+            "operationId": "SendEmailV2"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Get_Excel_Template_Content": {
+        "runAfter": {
+          "Check_for_existing_workbook": [
+            "Failed"
+          ]
+        },
+        "metadata": {
+          "%252fApproved%2bFinancial%2bSubmissions%252fFinancial%2bSubmissions%2bTemplate.xlsx": "/Approved Financial Submissions/Financial Submissions Template.xlsx",
+          "__MS_TEMPLATE_ID__": "/__MS_LIBRARY_NAME__/Financial Submissions Template.xlsx"
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "__MS_OUTPUT_SITE__",
+            "id": "__MS_TEMPLATE_ID__",
+            "inferContentType": true
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_7",
+            "operationId": "GetFileContent"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Create_Weekly_Transaction_Excel_File": {
+        "runAfter": {
+          "Get_Excel_Template_Content": [
+            "Succeeded"
+          ]
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "__MS_OUTPUT_SITE__",
+            "folderPath": "/__MS_LIBRARY_NAME__/@{variables('FolderName')}",
+            "name": "FinancialThings-@{variables('FolderName')}.xlsx",
+            "body": "@body('Get_Excel_Template_Content')"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_7",
+            "operationId": "CreateFile"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        },
+        "runtimeConfiguration": {
+          "contentTransfer": {
+            "transferMode": "Chunked"
+          }
+        }
+      },
+      "Delay": {
+        "runAfter": {
+          "Pull_out_attachments_and_prepare": [
+            "Succeeded"
+          ],
+          "Add_reminder_rows": [
+            "Succeeded"
+          ]
+        },
+        "type": "Wait",
+        "inputs": {
+          "interval": {
+            "count": 1,
+            "unit": "Minute"
+          }
+        }
+      },
+      "Create_Donation_Folder": {
+        "runAfter": {
+          "Create_Deposit_Folder": [
+            "Succeeded"
+          ]
+        },
+        "metadata": {
+          "operationMetadataId": "373bed16-caa6-4028-b3b2-2d0648e0b2b2"
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "__MS_OUTPUT_SITE__",
+            "table": "__MS_LIBRARY_WEEKLY__",
+            "parameters/path": "@{variables('FolderName')}/Donation"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_5",
+            "operationId": "CreateNewFolder"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Initialize_TestMode": {
+        "runAfter": {},
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "TestMode",
+              "type": "boolean",
+              "value": false
+            }
+          ]
+        }
+      },
+      "Initialize_Recipients": {
+        "runAfter": {
+          "Initialize_TestMode": [
+            "Succeeded"
+          ]
+        },
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "Recipients",
+              "type": "string",
+              "value": "__MS_RECIPIENTS__"
+            }
+          ]
+        }
+      },
+      "Initialize_Bookkeepers": {
+        "runAfter": {
+          "Initialize_Recipients": [
+            "Succeeded"
+          ]
+        },
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "Bookkeepers",
+              "type": "string",
+              "value": "__MS_BOOKKEEPERS__"
+            }
+          ]
+        }
+      },
+      "Share_folder_with_bookkeepers": {
+        "runAfter": {
+          "Create_root_folder": [
+            "Succeeded"
+          ]
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_1",
+            "operationId": "GrantAccess"
+          },
+          "parameters": {
+            "dataset": "__MS_OUTPUT_SITE__",
+            "table": "__MS_LIBRARY_WEEKLY__",
+            "id": "@outputs('Create_root_folder')?['body/ID']",
+            "parameter/recipients": "@variables('Bookkeepers')",
+            "parameter/roleValue": "role:1073741827",
+            "parameter/sendEmail": false
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Check_for_existing_workbook": {
+        "runAfter": {
+          "Create_root_folder": [
+            "Succeeded"
+          ]
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_1",
+            "operationId": "GetFileMetadataByPath"
+          },
+          "parameters": {
+            "dataset": "__MS_OUTPUT_SITE__",
+            "path": "/__MS_LIBRARY_NAME__/@{variables('FolderName')}/FinancialThings-@{variables('FolderName')}.xlsx"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Get_file_properties": {
+        "runAfter": {
+          "Create_Weekly_Transaction_Excel_File": [
+            "Succeeded",
+            "Skipped"
+          ]
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_1",
+            "operationId": "GetFileItem"
+          },
+          "parameters": {
+            "dataset": "__MS_OUTPUT_SITE__",
+            "table": "__MS_LIBRARY_WEEKLY__",
+            "id": "@coalesce(outputs('Create_Weekly_Transaction_Excel_File')?['body/ItemId'], outputs('Check_for_existing_workbook')?['body/ItemId'])"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Initialize_FileLinks": {
+        "runAfter": {
+          "Initialize_variable": [
+            "Succeeded"
+          ]
+        },
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "FileLinks",
+              "type": "array",
+              "value": []
+            }
+          ]
+        }
+      },
+      "List_existing_rows": {
+        "runAfter": {
+          "Initialize_FileLinks": [
+            "Succeeded"
+          ]
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+            "connectionName": "shared_excelonlinebusiness",
+            "operationId": "GetItems"
+          },
+          "parameters": {
+            "source": "__MS_EXCEL_SOURCE__",
+            "drive": "__MS_EXCEL_DRIVE__",
+            "file": "@{variables('FolderName')}/FinancialThings-@{variables('FolderName')}.xlsx",
+            "table": "WeeklySubmissions"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Rows_already_filled_in": {
+        "runAfter": {
+          "List_existing_rows": [
+            "Succeeded"
+          ]
+        },
+        "type": "Query",
+        "inputs": {
+          "from": "@coalesce(body('List_existing_rows')?['value'], json('[]'))",
+          "where": "@and(not(empty(item()?['Type'])), not(equals(item()?['Type'], 'Reminder')))"
+        }
+      },
+      "Initialize_ItemNo": {
+        "runAfter": {
+          "Rows_already_filled_in": [
+            "Succeeded"
+          ]
+        },
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "ItemNo",
+              "type": "integer",
+              "value": "@length(body('Rows_already_filled_in'))"
+            }
+          ]
+        }
+      },
+      "Reply_to_the_app": {
+        "runAfter": {
+          "Get_all_items_that_are_ready_for_processing": [
+            "Succeeded"
+          ]
+        },
+        "type": "Response",
+        "kind": "PowerApp",
+        "inputs": {
+          "statusCode": 200,
+          "body": {
+            "result": "@{concat(if(variables('TestMode'), 'TEST RUN. ', ''), 'Sending ', string(length(body('Get_all_items_that_are_ready_for_processing')?['value'])), if(equals(length(body('Get_all_items_that_are_ready_for_processing')?['value']), 1), ' item', ' items'), ' to the bookkeepers. The email arrives in a few minutes.')}"
+          },
+          "schema": {
+            "type": "object",
+            "properties": {
+              "result": {
+                "title": "Result",
+                "x-ms-dynamically-added": true,
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Initialize_ReminderDaysAhead": {
+        "runAfter": {
+          "Initialize_TestMode": [
+            "Succeeded"
+          ]
+        },
+        "type": "InitializeVariable",
+        "inputs": {
+          "variables": [
+            {
+              "name": "ReminderDaysAhead",
+              "type": "integer",
+              "value": 14
+            }
+          ]
+        }
+      },
+      "Get_payment_reminders": {
+        "runAfter": {
+          "Get_all_items_that_are_ready_for_processing": [
+            "Succeeded"
+          ],
+          "Initialize_ReminderDaysAhead": [
+            "Succeeded"
+          ]
+        },
+        "type": "OpenApiConnection",
+        "inputs": {
+          "parameters": {
+            "dataset": "__MS_LISTS_SITE__",
+            "table": "__MS_LIST_REMINDERS__"
+          },
+          "host": {
+            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+            "connectionName": "shared_sharepointonline_6",
+            "operationId": "GetItems"
+          },
+          "authentication": {
+            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+            "type": "Raw"
+          }
+        }
+      },
+      "Reminders_with_due_date": {
+        "runAfter": {
+          "Get_payment_reminders": [
+            "Succeeded"
+          ]
+        },
+        "type": "Select",
+        "inputs": {
+          "from": "@coalesce(body('Get_payment_reminders')?['value'], json('[]'))",
+          "select": {
+            "Name": "@item()?['Title']",
+            "Due": "@if(greaterOrEquals(int(first(split(string(item()?['DueDay']), '.'))), int(formatDateTime(triggerBody()['text'], 'dd'))), concat(formatDateTime(triggerBody()['text'], 'yyyy-MM-'), if(less(int(first(split(string(item()?['DueDay']), '.'))), 10), concat('0', string(int(first(split(string(item()?['DueDay']), '.'))))), string(int(first(split(string(item()?['DueDay']), '.')))))), concat(formatDateTime(addToTime(triggerBody()['text'], 1, 'Month'), 'yyyy-MM-'), if(less(int(first(split(string(item()?['DueDay']), '.'))), 10), concat('0', string(int(first(split(string(item()?['DueDay']), '.'))))), string(int(first(split(string(item()?['DueDay']), '.')))))))",
+            "Link": "@item()?['Link']",
+            "Note": "@item()?['Note']",
+            "Active": "@item()?['Active']"
+          }
+        }
+      },
+      "Reminders_due_soon": {
+        "runAfter": {
+          "Reminders_with_due_date": [
+            "Succeeded"
+          ]
+        },
+        "type": "Query",
+        "inputs": {
+          "from": "@body('Reminders_with_due_date')",
+          "where": "@and(not(equals(item()?['Active'], false)), lessOrEquals(ticks(item()?['Due']), ticks(addDays(triggerBody()['text'], variables('ReminderDaysAhead')))))"
+        }
+      },
+      "Reminder_lines": {
+        "runAfter": {
+          "Reminders_due_soon": [
+            "Succeeded"
+          ]
+        },
+        "type": "Select",
+        "inputs": {
+          "from": "@body('Reminders_due_soon')",
+          "select": "@concat('<li><b>', item()?['Name'], '</b>: due ', formatDateTime(item()?['Due'], 'dddd d MMMM'), ' (', if(equals(div(sub(ticks(item()?['Due']), ticks(triggerBody()['text'])), 864000000000), 0), 'today', if(equals(div(sub(ticks(item()?['Due']), ticks(triggerBody()['text'])), 864000000000), 1), 'tomorrow', concat('in ', string(div(sub(ticks(item()?['Due']), ticks(triggerBody()['text'])), 864000000000)), ' days'))), ')', if(empty(item()?['Link']), '', concat('. Pay at <a href=\"', item()?['Link'], '\">', item()?['Link'], '</a>')), if(empty(item()?['Note']), '', concat('. ', item()?['Note'])), '</li>')"
+        }
+      },
+      "Existing_reminder_rows": {
+        "runAfter": {
+          "Rows_already_filled_in": [
+            "Succeeded"
+          ]
+        },
+        "type": "Query",
+        "inputs": {
+          "from": "@coalesce(body('List_existing_rows')?['value'], json('[]'))",
+          "where": "@equals(item()?['Type'], 'Reminder')"
+        }
+      },
+      "Existing_reminder_names": {
+        "runAfter": {
+          "Existing_reminder_rows": [
+            "Succeeded"
+          ]
+        },
+        "type": "Select",
+        "inputs": {
+          "from": "@body('Existing_reminder_rows')",
+          "select": "@item()?['Vendor']"
+        }
+      },
+      "Add_reminder_rows": {
+        "foreach": "@body('Reminders_due_soon')",
+        "runAfter": {
+          "Pull_out_attachments_and_prepare": [
+            "Succeeded"
+          ],
+          "Reminders_due_soon": [
+            "Succeeded"
+          ],
+          "Existing_reminder_names": [
+            "Succeeded"
+          ]
+        },
+        "type": "Foreach",
+        "runtimeConfiguration": {
+          "concurrency": {
+            "repetitions": 1
+          }
+        },
+        "actions": {
+          "Reminder_row_not_there_yet": {
+            "runAfter": {},
+            "type": "If",
+            "expression": "@not(contains(body('Existing_reminder_names'), item()?['Name']))",
+            "actions": {
+              "Compose_Reminder_Row": {
+                "runAfter": {},
+                "type": "Compose",
+                "inputs": {
+                  "ItemNo": "",
+                  "Type": "Reminder",
+                  "Vendor": "@{item()?['Name']}",
+                  "Project": "",
+                  "CostAccount": "",
+                  "Comment": "@{concat('Due ', formatDateTime(item()?['Due'], 'dddd d MMMM'), ' (', if(equals(div(sub(ticks(item()?['Due']), ticks(triggerBody()['text'])), 864000000000), 0), 'today', if(equals(div(sub(ticks(item()?['Due']), ticks(triggerBody()['text'])), 864000000000), 1), 'tomorrow', concat('in ', string(div(sub(ticks(item()?['Due']), ticks(triggerBody()['text'])), 864000000000)), ' days'))), ')', if(empty(item()?['Note']), '', concat('. ', item()?['Note'])))}",
+                  "Amount": "",
+                  "ProcessedDate": "@{triggerBody()['text']}",
+                  "LinkToThing": "@{item()?['Link']}",
+                  "FileCount": "",
+                  "File1URL": "",
+                  "File2URL": "",
+                  "File3URL": "",
+                  "FolderURL": ""
+                }
+              },
+              "Add_reminder_row": {
+                "runAfter": {
+                  "Compose_Reminder_Row": [
+                    "Succeeded"
+                  ]
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "source": "__MS_EXCEL_SOURCE__",
+                    "drive": "__MS_EXCEL_DRIVE__",
+                    "file": "@{variables('FolderName')}/FinancialThings-@{variables('FolderName')}.xlsx",
+                    "table": "WeeklySubmissions",
+                    "item": "@outputs('Compose_Reminder_Row')"
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                    "connectionName": "shared_excelonlinebusiness",
+                    "operationId": "AddRowV2"
+                  },
+                  "authentication": {
+                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                    "type": "Raw"
+                  }
+                }
+              }
+            },
+            "else": {
+              "actions": {}
+            }
+          }
+        }
+      }
+    }
+  },
+  "connections": {
+    "shared_sharepointonline_7": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+    "shared_sharepointonline_9": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+    "shared_sharepointonline_10": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+    "shared_sharepointonline_8": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+    "shared_excelonlinebusiness": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+    "shared_sharepointonline_1": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+    "shared_sharepointonline_2": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+    "shared_sharepointonline_3": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+    "shared_sharepointonline_6": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+    "shared_sharepointonline_4": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+    "shared_sharepointonline_5": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+    "shared_office365": "/providers/Microsoft.PowerApps/apis/shared_office365"
+  }
+}
