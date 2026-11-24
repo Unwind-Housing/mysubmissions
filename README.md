@@ -48,7 +48,7 @@ See **[CONTRIBUTING.md](CONTRIBUTING.md)**. Report security problems privately: 
 
 ## Status
 
-MySubmissions is not yet at v1.0: settings can still change between versions, and the features listed above as planned are still being added. Try it on a test SharePoint site first.
+MySubmissions is in production: version 2 has run the weekly bookkeeping at small nonprofits since 2026, and 2.2.2 is the first public release. The settings format for everything listed above is stable; the features listed as planned arrive as new settings, so an installed organization takes them with an update rather than a reinstall. Try it on a test SharePoint site first all the same, as INSTALL.md says: that is how every install should start.
 
 ## Licence
 
